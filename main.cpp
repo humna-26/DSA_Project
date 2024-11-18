@@ -8,10 +8,10 @@ int main() {
     Board board;
     
     // Initialize with starting position
-    char startpos[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    char startpos[] = "r1bqk1nr/pppp1ppp/2n5/2b5/4P3/1N6/PPP2PPP/RNBQKB1R w KQkq - 0 1";
     board.initFromFen(startpos);
-    
-    board.printBoard();
+
+    getchar();
     
     return 0;
 }
