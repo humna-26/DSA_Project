@@ -42,18 +42,18 @@ void Board::initFromFen(char* FEN) {
             // Place piece
             int piece, color;
             switch(*currentChar) {
-                case 'P': piece = 0; color = white; break;
-                case 'N': piece = 1; color = white; break;
-                case 'B': piece = 2; color = white; break;
-                case 'R': piece = 3; color = white; break;
-                case 'Q': piece = 4; color = white; break;
-                case 'K': piece = 5; color = white; break;
-                case 'p': piece = 0; color = black; break;
-                case 'n': piece = 1; color = black; break;
-                case 'b': piece = 2; color = black; break;
-                case 'r': piece = 3; color = black; break;
-                case 'q': piece = 4; color = black; break;
-                case 'k': piece = 5; color = black; break;
+                case 'P': piece = pawn; color = white; break;
+                case 'N': piece = knight; color = white; break;
+                case 'B': piece = bishop; color = white; break;
+                case 'R': piece = rook; color = white; break;
+                case 'Q': piece = queen; color = white; break;
+                case 'K': piece = king; color = white; break;
+                case 'p': piece = pawn; color = black; break;
+                case 'n': piece = knight; color = black; break;
+                case 'b': piece = bishop; color = black; break;
+                case 'r': piece = rook; color = black; break;
+                case 'q': piece = queen; color = black; break;
+                case 'k': piece = king; color = black; break;
                 default: currentChar++; continue;
             }
             set_bit(pieceBitboards[color][piece], square);
@@ -112,41 +112,4 @@ void Board::initFromFen(char* FEN) {
     occupancyBitboards[2] = occupancyBitboards[white] | occupancyBitboards[black];
 }
 
-void Board::printBoard() const {
-    cout << "\n  Chess Board:\n\n";
-    
-    // Loop through ranks (8 to 1)
-    for (int rank = 0; rank < 8; rank++) {
-        cout << 8 - rank << "  ";  // Print rank number
-        
-        // Loop through files (a to h)
-        for (int file = 0; file < 8; file++) {
-            int square = rank * 8 + file;
-            char piece = '.';  // Default empty square
-            
-            // Check each piece type and color
-            for (int color = 0; color < 2; color++) {
-                for (int pieceType = 0; pieceType < 6; pieceType++) {
-                    if (get_bit(pieceBitboards[color][pieceType], square)) {
-                        // Convert piece type and color to character
-                        switch(pieceType) {
-                            case 0: piece = (color == white) ? 'P' : 'p'; break;
-                            case 1: piece = (color == white) ? 'N' : 'n'; break;
-                            case 2: piece = (color == white) ? 'B' : 'b'; break;
-                            case 3: piece = (color == white) ? 'R' : 'r'; break;
-                            case 4: piece = (color == white) ? 'Q' : 'q'; break;
-                            case 5: piece = (color == white) ? 'K' : 'k'; break;
-                        }
-                    }
-                }
-            }
-            cout << " " << piece;
-        }
-        cout << endl;
-    }
-    
-    // Print file letters
-    cout << "\n    a b c d e f g h\n\n";
-    
-  
-}
+void Board::printBoard() const {}
