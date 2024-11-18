@@ -53,10 +53,10 @@ RM = "C:\Program Files\CMake\bin\cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\Proj"
+CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\Proj\bin"
+CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project\bin"
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -84,14 +84,14 @@ clean: CMakeFiles/ChessProject.dir/clean
 CMakeFiles/ChessProject.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" --progress-num=1,2,3,4 "Built target ChessProject"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" --progress-num=1,2,3,4 "Built target ChessProject"
 .PHONY : CMakeFiles/ChessProject.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ChessProject.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" 4
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/ChessProject.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" 0
 .PHONY : CMakeFiles/ChessProject.dir/rule
 
 # Convenience name for target.

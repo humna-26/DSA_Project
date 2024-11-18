@@ -1,5 +1,5 @@
 CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: \
- D:\uni\ stuff\Semester-3\DSA\Proj\src\PieceUtil.cpp \
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.cpp \
  C:/msys64/ucrt64/include/c++/13.2.0/iostream \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/requires_hosted.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++config.h \
@@ -137,4 +137,4 @@ CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/cstdint \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
  C:/msys64/ucrt64/include/stdint.h \
- D:\uni\ stuff\Semester-3\DSA\Proj\src\PieceUtil.h
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.h

@@ -52,10 +52,10 @@ RM = "C:\Program Files\CMake\bin\cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\Proj"
+CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\Proj\bin"
+CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project\bin"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/ChessProject.dir/depend.make
@@ -71,72 +71,72 @@ include CMakeFiles/ChessProject.dir/flags.make
 CMakeFiles/ChessProject.dir/codegen:
 .PHONY : CMakeFiles/ChessProject.dir/codegen
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj: D:/uni\ stuff/Semester-3/DSA/Proj/src/DSA_Project/main.cpp
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj -MF CMakeFiles\ChessProject.dir\src\DSA_Project\main.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\DSA_Project\main.cpp.obj -c "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\main.cpp"
+CMakeFiles/ChessProject.dir/src/main.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
+CMakeFiles/ChessProject.dir/src/main.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
+CMakeFiles/ChessProject.dir/src/main.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/main.cpp
+CMakeFiles/ChessProject.dir/src/main.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ChessProject.dir/src/main.cpp.obj"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/main.cpp.obj -MF CMakeFiles\ChessProject.dir\src\main.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\main.cpp.obj -c "D:\uni stuff\Semester-3\DSA\DSA_Project\src\main.cpp"
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.i"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\main.cpp" > CMakeFiles\ChessProject.dir\src\DSA_Project\main.cpp.i
+CMakeFiles/ChessProject.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/main.cpp.i"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\DSA_Project\src\main.cpp" > CMakeFiles\ChessProject.dir\src\main.cpp.i
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.s"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\main.cpp" -o CMakeFiles\ChessProject.dir\src\DSA_Project\main.cpp.s
+CMakeFiles/ChessProject.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/main.cpp.s"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\DSA_Project\src\main.cpp" -o CMakeFiles\ChessProject.dir\src\main.cpp.s
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj: D:/uni\ stuff/Semester-3/DSA/Proj/src/DSA_Project/PieceUtil.cpp
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj -MF CMakeFiles\ChessProject.dir\src\DSA_Project\PieceUtil.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\DSA_Project\PieceUtil.cpp.obj -c "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\PieceUtil.cpp"
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.cpp
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj -MF CMakeFiles\ChessProject.dir\src\PieceUtil.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\PieceUtil.cpp.obj -c "D:\uni stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.cpp"
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.i"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\PieceUtil.cpp" > CMakeFiles\ChessProject.dir\src\DSA_Project\PieceUtil.cpp.i
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.i"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.cpp" > CMakeFiles\ChessProject.dir\src\PieceUtil.cpp.i
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.s"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\PieceUtil.cpp" -o CMakeFiles\ChessProject.dir\src\DSA_Project\PieceUtil.cpp.s
+CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.s"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.cpp" -o CMakeFiles\ChessProject.dir\src\PieceUtil.cpp.s
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj: D:/uni\ stuff/Semester-3/DSA/Proj/src/DSA_Project/Board.cpp
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj -MF CMakeFiles\ChessProject.dir\src\DSA_Project\Board.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\DSA_Project\Board.cpp.obj -c "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\Board.cpp"
+CMakeFiles/ChessProject.dir/src/Board.cpp.obj: CMakeFiles/ChessProject.dir/flags.make
+CMakeFiles/ChessProject.dir/src/Board.cpp.obj: CMakeFiles/ChessProject.dir/includes_CXX.rsp
+CMakeFiles/ChessProject.dir/src/Board.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/Board.cpp
+CMakeFiles/ChessProject.dir/src/Board.cpp.obj: CMakeFiles/ChessProject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ChessProject.dir/src/Board.cpp.obj"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChessProject.dir/src/Board.cpp.obj -MF CMakeFiles\ChessProject.dir\src\Board.cpp.obj.d -o CMakeFiles\ChessProject.dir\src\Board.cpp.obj -c "D:\uni stuff\Semester-3\DSA\DSA_Project\src\Board.cpp"
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.i"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\Board.cpp" > CMakeFiles\ChessProject.dir\src\DSA_Project\Board.cpp.i
+CMakeFiles/ChessProject.dir/src/Board.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChessProject.dir/src/Board.cpp.i"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\uni stuff\Semester-3\DSA\DSA_Project\src\Board.cpp" > CMakeFiles\ChessProject.dir\src\Board.cpp.i
 
-CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.s"
-	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\Proj\src\DSA_Project\Board.cpp" -o CMakeFiles\ChessProject.dir\src\DSA_Project\Board.cpp.s
+CMakeFiles/ChessProject.dir/src/Board.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChessProject.dir/src/Board.cpp.s"
+	C:\msys64\ucrt64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\uni stuff\Semester-3\DSA\DSA_Project\src\Board.cpp" -o CMakeFiles\ChessProject.dir\src\Board.cpp.s
 
 # Object files for target ChessProject
 ChessProject_OBJECTS = \
-"CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj" \
-"CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj" \
-"CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj"
+"CMakeFiles/ChessProject.dir/src/main.cpp.obj" \
+"CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj" \
+"CMakeFiles/ChessProject.dir/src/Board.cpp.obj"
 
 # External object files for target ChessProject
 ChessProject_EXTERNAL_OBJECTS =
 
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/build.make
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/linkLibs.rsp
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/objects1.rsp
-D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe: CMakeFiles/ChessProject.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable \"D:\uni stuff\Semester-3\DSA\Proj\ChessProject.exe\""
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/src/main.cpp.obj
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/src/Board.cpp.obj
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/build.make
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/linkLibs.rsp
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/objects1.rsp
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe: CMakeFiles/ChessProject.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable \"D:\uni stuff\Semester-3\DSA\DSA_Project\ChessProject.exe\""
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\ChessProject.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/ChessProject.dir/build: D:/uni\ stuff/Semester-3/DSA/Proj/ChessProject.exe
+CMakeFiles/ChessProject.dir/build: D:/uni\ stuff/Semester-3/DSA/DSA_Project/ChessProject.exe
 .PHONY : CMakeFiles/ChessProject.dir/build
 
 CMakeFiles/ChessProject.dir/clean:
@@ -144,6 +144,6 @@ CMakeFiles/ChessProject.dir/clean:
 .PHONY : CMakeFiles/ChessProject.dir/clean
 
 CMakeFiles/ChessProject.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" "D:\uni stuff\Semester-3\DSA\Proj" "D:\uni stuff\Semester-3\DSA\Proj" "D:\uni stuff\Semester-3\DSA\Proj\bin" "D:\uni stuff\Semester-3\DSA\Proj\bin" "D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles\ChessProject.dir\DependInfo.cmake" "--color=$(COLOR)"
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" "D:\uni stuff\Semester-3\DSA\DSA_Project" "D:\uni stuff\Semester-3\DSA\DSA_Project" "D:\uni stuff\Semester-3\DSA\DSA_Project\bin" "D:\uni stuff\Semester-3\DSA\DSA_Project\bin" "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles\ChessProject.dir\DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/ChessProject.dir/depend
 

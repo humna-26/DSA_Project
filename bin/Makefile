@@ -56,10 +56,10 @@ RM = "C:\Program Files\CMake\bin\cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\Proj"
+CMAKE_SOURCE_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\Proj\bin"
+CMAKE_BINARY_DIR = "D:\uni stuff\Semester-3\DSA\DSA_Project\bin"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" "D:\uni stuff\Semester-3\DSA\Proj\bin\\CMakeFiles\progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\\CMakeFiles\progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\Proj\bin\CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "D:\uni stuff\Semester-3\DSA\DSA_Project\bin\CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -128,77 +128,77 @@ ChessProject/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/build
 .PHONY : ChessProject/fast
 
-src/DSA_Project/Board.obj: src/DSA_Project/Board.cpp.obj
-.PHONY : src/DSA_Project/Board.obj
+src/Board.obj: src/Board.cpp.obj
+.PHONY : src/Board.obj
 
 # target to build an object file
-src/DSA_Project/Board.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.obj
-.PHONY : src/DSA_Project/Board.cpp.obj
+src/Board.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/Board.cpp.obj
+.PHONY : src/Board.cpp.obj
 
-src/DSA_Project/Board.i: src/DSA_Project/Board.cpp.i
-.PHONY : src/DSA_Project/Board.i
+src/Board.i: src/Board.cpp.i
+.PHONY : src/Board.i
 
 # target to preprocess a source file
-src/DSA_Project/Board.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.i
-.PHONY : src/DSA_Project/Board.cpp.i
+src/Board.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/Board.cpp.i
+.PHONY : src/Board.cpp.i
 
-src/DSA_Project/Board.s: src/DSA_Project/Board.cpp.s
-.PHONY : src/DSA_Project/Board.s
+src/Board.s: src/Board.cpp.s
+.PHONY : src/Board.s
 
 # target to generate assembly for a file
-src/DSA_Project/Board.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/Board.cpp.s
-.PHONY : src/DSA_Project/Board.cpp.s
+src/Board.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/Board.cpp.s
+.PHONY : src/Board.cpp.s
 
-src/DSA_Project/PieceUtil.obj: src/DSA_Project/PieceUtil.cpp.obj
-.PHONY : src/DSA_Project/PieceUtil.obj
+src/PieceUtil.obj: src/PieceUtil.cpp.obj
+.PHONY : src/PieceUtil.obj
 
 # target to build an object file
-src/DSA_Project/PieceUtil.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.obj
-.PHONY : src/DSA_Project/PieceUtil.cpp.obj
+src/PieceUtil.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj
+.PHONY : src/PieceUtil.cpp.obj
 
-src/DSA_Project/PieceUtil.i: src/DSA_Project/PieceUtil.cpp.i
-.PHONY : src/DSA_Project/PieceUtil.i
+src/PieceUtil.i: src/PieceUtil.cpp.i
+.PHONY : src/PieceUtil.i
 
 # target to preprocess a source file
-src/DSA_Project/PieceUtil.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.i
-.PHONY : src/DSA_Project/PieceUtil.cpp.i
+src/PieceUtil.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.i
+.PHONY : src/PieceUtil.cpp.i
 
-src/DSA_Project/PieceUtil.s: src/DSA_Project/PieceUtil.cpp.s
-.PHONY : src/DSA_Project/PieceUtil.s
+src/PieceUtil.s: src/PieceUtil.cpp.s
+.PHONY : src/PieceUtil.s
 
 # target to generate assembly for a file
-src/DSA_Project/PieceUtil.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/PieceUtil.cpp.s
-.PHONY : src/DSA_Project/PieceUtil.cpp.s
+src/PieceUtil.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.s
+.PHONY : src/PieceUtil.cpp.s
 
-src/DSA_Project/main.obj: src/DSA_Project/main.cpp.obj
-.PHONY : src/DSA_Project/main.obj
+src/main.obj: src/main.cpp.obj
+.PHONY : src/main.obj
 
 # target to build an object file
-src/DSA_Project/main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.obj
-.PHONY : src/DSA_Project/main.cpp.obj
+src/main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/main.cpp.obj
+.PHONY : src/main.cpp.obj
 
-src/DSA_Project/main.i: src/DSA_Project/main.cpp.i
-.PHONY : src/DSA_Project/main.i
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-src/DSA_Project/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.i
-.PHONY : src/DSA_Project/main.cpp.i
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-src/DSA_Project/main.s: src/DSA_Project/main.cpp.s
-.PHONY : src/DSA_Project/main.s
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-src/DSA_Project/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/DSA_Project/main.cpp.s
-.PHONY : src/DSA_Project/main.cpp.s
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -209,15 +209,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... ChessProject
-	@echo ... src/DSA_Project/Board.obj
-	@echo ... src/DSA_Project/Board.i
-	@echo ... src/DSA_Project/Board.s
-	@echo ... src/DSA_Project/PieceUtil.obj
-	@echo ... src/DSA_Project/PieceUtil.i
-	@echo ... src/DSA_Project/PieceUtil.s
-	@echo ... src/DSA_Project/main.obj
-	@echo ... src/DSA_Project/main.i
-	@echo ... src/DSA_Project/main.s
+	@echo ... src/Board.obj
+	@echo ... src/Board.i
+	@echo ... src/Board.s
+	@echo ... src/PieceUtil.obj
+	@echo ... src/PieceUtil.i
+	@echo ... src/PieceUtil.s
+	@echo ... src/main.obj
+	@echo ... src/main.i
+	@echo ... src/main.s
 .PHONY : help
 
 
