@@ -9,7 +9,7 @@ Board::Board() {
     // Initialize all bitboards to 0
     memset(pieceBitboards, 0, sizeof(pieceBitboards));
     memset(occupancyBitboards, 0, sizeof(occupancyBitboards));
-    attackedBitboard = 0ULL;
+    memset(attackingBitboards, 0, sizeof(attackingBitboards));
     
     // Initialize game state
     zobristHash = 0ULL;

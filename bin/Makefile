@@ -152,6 +152,30 @@ src/Board.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/Board.cpp.s
 .PHONY : src/Board.cpp.s
 
+src/MoveUtil.obj: src/MoveUtil.cpp.obj
+.PHONY : src/MoveUtil.obj
+
+# target to build an object file
+src/MoveUtil.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj
+.PHONY : src/MoveUtil.cpp.obj
+
+src/MoveUtil.i: src/MoveUtil.cpp.i
+.PHONY : src/MoveUtil.i
+
+# target to preprocess a source file
+src/MoveUtil.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.i
+.PHONY : src/MoveUtil.cpp.i
+
+src/MoveUtil.s: src/MoveUtil.cpp.s
+.PHONY : src/MoveUtil.s
+
+# target to generate assembly for a file
+src/MoveUtil.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChessProject.dir\build.make CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.s
+.PHONY : src/MoveUtil.cpp.s
+
 src/PieceUtil.obj: src/PieceUtil.cpp.obj
 .PHONY : src/PieceUtil.obj
 
@@ -212,6 +236,9 @@ help:
 	@echo ... src/Board.obj
 	@echo ... src/Board.i
 	@echo ... src/Board.s
+	@echo ... src/MoveUtil.obj
+	@echo ... src/MoveUtil.i
+	@echo ... src/MoveUtil.s
 	@echo ... src/PieceUtil.obj
 	@echo ... src/PieceUtil.i
 	@echo ... src/PieceUtil.s

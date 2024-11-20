@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "D:/uni stuff/Semester-3/DSA/DSA_Project/src/Board.cpp" "CMakeFiles/ChessProject.dir/src/Board.cpp.obj" "gcc" "CMakeFiles/ChessProject.dir/src/Board.cpp.obj.d"
+  "D:/uni stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.cpp" "CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj" "gcc" "CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj.d"
   "D:/uni stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.cpp" "CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj" "gcc" "CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj.d"
   "D:/uni stuff/Semester-3/DSA/DSA_Project/src/main.cpp" "CMakeFiles/ChessProject.dir/src/main.cpp.obj" "gcc" "CMakeFiles/ChessProject.dir/src/main.cpp.obj.d"
   )

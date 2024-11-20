@@ -138,4 +138,5 @@ CMakeFiles/ChessProject.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
  C:/msys64/ucrt64/include/stdint.h \
  D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.h \
- D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\Board.h
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\Board.h \
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\MoveUtil.h

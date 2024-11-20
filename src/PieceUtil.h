@@ -51,7 +51,7 @@ inline int getNBits(uint64_t num){
     return count;
 }
 
-// function to get the index of least significant bit
+// function to get the index of least significant bit which is 1
 inline int getLSBIndex(uint64_t num){
     if(num)
         // (-num) is 2's complement of num. num & -num will return the bitboard with only the lsb of the original.
