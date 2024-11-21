@@ -15,7 +15,9 @@ CMakeFiles/ChessProject.dir/src/Board.cpp.obj: \
  C:/msys64/ucrt64/include/sdks/_mingw_ddk.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h \
  C:/msys64/ucrt64/include/stddef.h \
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\MoveList.h \
  D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\PieceUtil.h \
+ D:\uni\ stuff\Semester-3\DSA\DSA_Project\src\MoveUtil.h \
  C:/msys64/ucrt64/include/c++/13.2.0/cstring \
  C:/msys64/ucrt64/include/string.h \
  C:/msys64/ucrt64/include/sec_api/string_s.h \

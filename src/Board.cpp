@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "PieceUtil.h"
+#include "MoveUtil.h"
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
@@ -18,6 +19,9 @@ Board::Board() {
     enpassantSquare = -1;
     halfMoveClocks[0] = 0;  // halfmove clock
     halfMoveClocks[1] = 1;  // fullmove number
+
+    // init move list
+    moveList = MoveList();
 }
 
 void Board::initFromFen(char* FEN) {
@@ -113,3 +117,13 @@ void Board::initFromFen(char* FEN) {
 }
 
 void Board::printBoard() const {}
+
+// Generates all legal moves and adds to move list
+void Board::generateMoves(){
+    // To be filled
+}
+
+// Makes a move by updating the board accordingly
+void Board::makeMove(int move){
+    // To be filled
+}

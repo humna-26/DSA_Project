@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include <cstdint>
+#include "MoveList.h"
 
 class Board {
     public:
@@ -18,7 +19,12 @@ class Board {
         int halfMoveClocks[2];
 
         void initFromFen(char* FEN);
-        void printBoard() const;  
+        void printBoard() const;
+
+        MoveList moveList;
+
+        void generateMoves();
+        void makeMove(int move);
 };
 
 #endif

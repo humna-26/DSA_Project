@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ChessProject.dir/src/Board.cpp.obj"
   "CMakeFiles/ChessProject.dir/src/Board.cpp.obj.d"
+  "CMakeFiles/ChessProject.dir/src/MoveList.cpp.obj"
+  "CMakeFiles/ChessProject.dir/src/MoveList.cpp.obj.d"
   "CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj"
   "CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj.d"
   "CMakeFiles/ChessProject.dir/src/PieceUtil.cpp.obj"

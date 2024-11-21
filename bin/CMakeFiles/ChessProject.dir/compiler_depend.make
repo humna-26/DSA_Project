@@ -151,7 +151,12 @@ CMakeFiles/ChessProject.dir/src/Board.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/Board.h \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.h \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.h
+
+CMakeFiles/ChessProject.dir/src/MoveList.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.cpp \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.h
 
 CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.cpp \
   C:/msys64/ucrt64/include/_mingw.h \
@@ -170,6 +175,8 @@ CMakeFiles/ChessProject.dir/src/MoveUtil.cpp.obj: D:/uni\ stuff/Semester-3/DSA/D
   C:/msys64/ucrt64/include/vadefs.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/Board.h \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.h
 
@@ -468,6 +475,7 @@ CMakeFiles/ChessProject.dir/src/main.cpp.obj: D:/uni\ stuff/Semester-3/DSA/DSA_P
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/Board.h \
+  D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.h \
   D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.h
 
@@ -487,6 +495,8 @@ C:/msys64/ucrt64/include/c++/13.2.0/bits/move.h:
 D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.cpp:
 
 C:/msys64/ucrt64/include/_mingw.h:
+
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.cpp:
 
 D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/PieceUtil.h:
 
@@ -775,6 +785,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h:
 
 D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/Board.h:
+
+D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveList.h:
 
 D:/uni\ stuff/Semester-3/DSA/DSA_Project/src/MoveUtil.h:
 

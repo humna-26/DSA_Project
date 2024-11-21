@@ -22,7 +22,7 @@ enum {
 
 enum { white, black, noColour};
 
-enum { pawn, knight, bishop, rook, queen, king};
+enum { pawn, knight, bishop, rook, queen, king, noPiece};
 
 /*
 
