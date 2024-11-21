@@ -1,3 +1,0 @@
-D:/uni stuff/Semester-3/DSA/DSA_Project/bin/CMakeFiles/ChessProject.dir
-D:/uni stuff/Semester-3/DSA/DSA_Project/bin/CMakeFiles/edit_cache.dir
-D:/uni stuff/Semester-3/DSA/DSA_Project/bin/CMakeFiles/rebuild_cache.dir
