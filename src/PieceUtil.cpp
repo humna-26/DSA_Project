@@ -49,9 +49,72 @@ ATTACK MAPS
 */
 
 // Saad + Hassan(first 3 functions)
-uint64_t genPawnAttackBB(int side, int square){ return 0ULL;}
-uint64_t genKnightAttackBB(int square){ return 0ULL;}
-uint64_t genKingAttackBB(int square){ return 0ULL;}
+uint64_t genPawnAttackBB(int side, int square){
+    uint64_t attacks = 0ULL;
+    uint64_t pieceBB = 0ULL;
+    
+    set_bit(pieceBB, square);
+
+    uint64_t file_a = file_a_bb;
+    uint64_t file_h = file_a << 7;
+    
+    if(side == white)
+    {
+        if ((pieceBB >> 7) & ~file_a) attacks |= (pieceBB >> 7);
+        if ((pieceBB >> 9) & ~file_h) attacks |= (pieceBB >> 9);
+    }
+    else if(side == black)
+    {
+        if ((pieceBB << 7) & ~file_h) attacks |= (pieceBB << 7);
+        if ((pieceBB << 9) & ~file_a) attacks |= (pieceBB << 9);
+    }
+    
+    return attacks;
+}
+
+uint64_t genKnightAttackBB(int square){
+    uint64_t attacks = 0ULL;
+    uint64_t pieceBB = 0ULL;
+
+    uint64_t file_a = file_a_bb;
+    uint64_t file_ab = file_a | (file_a_bb << 1);
+    uint64_t file_h = file_a << 7;
+    uint64_t file_hg = file_h | (file_a << 6);
+
+    set_bit(pieceBB, square);
+
+    if ((pieceBB >> 17) & ~file_h) attacks |= (pieceBB >> 17);
+    if ((pieceBB >> 15) & ~file_a) attacks |= (pieceBB >> 15);
+    if ((pieceBB >> 10) & ~file_hg) attacks |= (pieceBB >> 10);
+    if ((pieceBB >> 6) & ~file_ab) attacks |= (pieceBB >> 6);
+    if ((pieceBB << 17) & ~file_a) attacks |= (pieceBB << 17);
+    if ((pieceBB << 15) & ~file_h) attacks |= (pieceBB << 15);
+    if ((pieceBB << 10) & ~file_ab) attacks |= (pieceBB << 10);
+    if ((pieceBB << 6) & ~file_hg) attacks |= (pieceBB << 6);
+
+    return attacks;
+}
+
+uint64_t genKingAttackBB(int square){
+    uint64_t attacks = 0ULL;
+    uint64_t pieceBB = 0ULL;
+
+    uint64_t file_a = file_a_bb;
+    uint64_t file_h = file_a << 7;
+
+    set_bit(pieceBB, square);
+
+    if (pieceBB >> 8) attacks |= (pieceBB >> 8);
+    if ((pieceBB >> 9) & ~file_h) attacks |= (pieceBB >> 9);
+    if ((pieceBB >> 7) & ~file_a) attacks |= (pieceBB >> 7);
+    if ((pieceBB >> 1) & ~file_h) attacks |= (pieceBB >> 1);
+    if (pieceBB << 8) attacks |= (pieceBB << 8);
+    if ((pieceBB << 9) & ~file_a) attacks |= (pieceBB << 9);
+    if ((pieceBB << 7) & ~file_h) attacks |= (pieceBB << 7);
+    if ((pieceBB << 1) & ~file_a) attacks |= (pieceBB << 1);
+
+    return attacks;
+}
 
 uint64_t genRookAttackBB(int square){
     uint64_t attacks = 0ULL;
@@ -190,6 +253,12 @@ uint64_t bishopAttackMap[64][512];
 void initAttackMaps(){
     // looping over all squares as needed for all attack maps
     for(int i = 0; i < 64; i++){
+        // init leaper pieces attack maps
+        pawnAttackMap[white][i] = genPawnAttackBB(white, i);
+        pawnAttackMap[black][i] = genPawnAttackBB(black, i);
+        knightAttackMap[i] = genKnightAttackBB(i);
+        kingAttackMap[i] = genKingAttackBB(i);
+        
         // init rook and bishop leap maps
         rookLeapMap[i] = genRookAttackBB(i);
         bishopLeapMap[i] = genBishopAttackBB(i);

@@ -2,13 +2,14 @@
 #define BOARD_H
 
 #include <cstdint>
+#include "MoveList.h"
 
 class Board {
     public:
         Board();
         uint64_t pieceBitboards[2][6];
         uint64_t occupancyBitboards[3];
-        uint64_t attackedBitboard;
+        uint64_t attackingBitboards[3];
 
         uint64_t zobristHash;
 
@@ -18,7 +19,12 @@ class Board {
         int halfMoveClocks[2];
 
         void initFromFen(char* FEN);
-        void printBoard() const;  
+        void printBoard() const;
+
+        MoveList moveList;
+
+        void generateMoves();
+        void makeMove(int move);
 };
 
 #endif

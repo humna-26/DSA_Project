@@ -22,7 +22,7 @@ enum {
 
 enum { white, black, noColour};
 
-enum { pawn, knight, bishop, rook, queen, king};
+enum { pawn, knight, bishop, rook, queen, king, noPiece};
 
 /*
 
@@ -36,6 +36,9 @@ MACROS AND UTIL FUNCTIONS
 #define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))
 // pops bit at square
 #define pop_bit(bitboard, square) ((bitboard) &= ~(1ULL << (square)))
+
+// useful bitboard values
+static const uint64_t file_a_bb = 72340172838076673ULL;
 
 // function to print a bitboard in a 8x8 grid with some other useful info
 void print_bitboard(uint64_t bitboard);
@@ -51,7 +54,7 @@ inline int getNBits(uint64_t num){
     return count;
 }
 
-// function to get the index of least significant bit
+// function to get the index of least significant bit which is 1
 inline int getLSBIndex(uint64_t num){
     if(num)
         // (-num) is 2's complement of num. num & -num will return the bitboard with only the lsb of the original.
