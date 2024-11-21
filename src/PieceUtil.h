@@ -37,6 +37,9 @@ MACROS AND UTIL FUNCTIONS
 // pops bit at square
 #define pop_bit(bitboard, square) ((bitboard) &= ~(1ULL << (square)))
 
+// useful bitboard values
+static const uint64_t file_a_bb = 72340172838076673ULL;
+
 // function to print a bitboard in a 8x8 grid with some other useful info
 void print_bitboard(uint64_t bitboard);
 
