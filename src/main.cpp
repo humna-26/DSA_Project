@@ -43,7 +43,7 @@ void perft(Board *board, int depth, int *count){
     // Loop over all the legal moves
     for(int i = 0; i < (*board).moveList.count; i++){
         // Save the board state
-        memcpy(&boardCopy, board, sizeof(board));
+        memcpy(&boardCopy, board, sizeof(*board));
 
         // Apply the i'th move to the board
         // Need the makeMove function for this to be done properly
@@ -54,6 +54,6 @@ void perft(Board *board, int depth, int *count){
         perft(board, depth - 1, count);
 
         // Restore the board state
-        memcpy(board, &boardCopy, sizeof(board));
+        memcpy(board, &boardCopy, sizeof(*board));
     }
 }
