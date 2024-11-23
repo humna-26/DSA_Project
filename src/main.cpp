@@ -19,7 +19,6 @@ int main() {
 
     print_bitboard(board.attackingBitboards[white]);
     print_bitboard(board.attackingBitboards[black]);
-    print_bitboard(board.attackingBitboards[noColour]);
 
     getchar();
     
