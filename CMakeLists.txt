@@ -16,6 +16,7 @@ add_executable(ChessProject
     ${SRC_DIR}/Board.cpp
     ${SRC_DIR}/MoveUtil.cpp
     ${SRC_DIR}/MoveList.cpp
+    ${SRC_DIR}/SearchUtil.cpp
 )
 
 # Include header files from the src directory
