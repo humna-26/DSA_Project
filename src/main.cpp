@@ -5,21 +5,20 @@
 #include "MoveUtil.h"
 using namespace std;
 
+static char startpos[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 int main() {
 
     initAttackMaps();
 
-    int move = encode_move(e2, e4, white, pawn, false, false, false, false, 7);
+    Board board = Board();
 
-    cout << "From: " << get_move_source(move) << endl;
-    cout << "To: " << get_move_target(move) << endl;
-    cout << "Colour: " << get_move_colour(move) << endl;
-    cout << "Type: " << get_move_piece(move) << endl;
-    cout << "Promoted: " << get_move_promoted(move) << endl;
-    cout << "Capture: " << get_move_capture(move) << endl;
-    cout << "Enpassant: " << get_move_enpassant(move) << endl;
-    cout << "Castling: " << get_move_castling(move) << endl;
-    cout << "Promoted Type: " << get_move_promotedType(move) << endl;
+    char fen[] = "2b5/p2NBp1p/1bp1nPPr/3P4/2pRnr1P/1k1B1Ppp/1P1P1pQP/Rq1N3K b - - 0 1";
+
+    board.initFromFen(fen);
+
+    print_bitboard(board.attackingBitboards[white]);
+    print_bitboard(board.attackingBitboards[black]);
 
     getchar();
     
