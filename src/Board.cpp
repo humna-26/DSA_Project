@@ -115,8 +115,8 @@ void Board::initFromFen(char* FEN) {
     }
     occupancyBitboards[2] = occupancyBitboards[white] | occupancyBitboards[black];
 
-    attackingBitboards[white] = attackingMap(white, *this);
-    attackingBitboards[black] = attackingMap(black, *this);
+    attackingBitboards[white] = attackedMap(white, *this);
+    attackingBitboards[black] = attackedMap(black, *this);
     attackingBitboards[noColour] = attackingBitboards[white] | attackingBitboards[black];
 }
 

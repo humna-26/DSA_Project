@@ -8,7 +8,7 @@
 
 */
 
-uint64_t attackingMap(int side, Board board){
+uint64_t attackedMap(int side, Board board){
     // init bitboard to 0
     uint64_t result = 0ULL;
 
