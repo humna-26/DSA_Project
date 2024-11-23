@@ -12,19 +12,48 @@ int main() {
     initAttackMaps();
 
     Board board = Board();
+    board.initFromFen(startpos);
 
-    char fen[] = "2b5/p2NBp1p/1bp1nPPr/3P4/2pRnr1P/1k1B1Ppp/1P1P1pQP/Rq1N3K b - - 0 1";
+    /*
+    
+    int *count = 0;
+    int depth = 5;
+    perft(&board, depth, count);
+    cout << "perft at depth " << depth << " : " << count << endl;
+    
+    */
 
-    board.initFromFen(fen);
-
-    print_bitboard(board.attackingBitboards[white]);
-    print_bitboard(board.attackingBitboards[black]);
+    cout << sizeof(board);
 
     getchar();
     
     return 0;
 }
 
-void perft(int depth){
-    // To be filled
+void perft(Board *board, int depth, int *count){
+    // Base condition
+    if(depth == 0){
+        // Count the leaf node and return
+        (*count)++;
+        return;
+    }
+    // Save the board state
+    Board boardCopy = Board();
+
+    // Loop over all the legal moves
+    for(int i = 0; i < (*board).moveList.count; i++){
+        // Save the board state
+        memcpy(&boardCopy, board, sizeof(board));
+
+        // Apply the i'th move to the board
+        // Need the makeMove function for this to be done properly
+
+        // (*board).makeMove((*board).moveList.moves[i]);
+
+        // Call function with updated board and further depth
+        perft(board, depth - 1, count);
+
+        // Restore the board state
+        memcpy(board, &boardCopy, sizeof(board));
+    }
 }
