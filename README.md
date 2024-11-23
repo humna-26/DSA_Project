@@ -17,7 +17,7 @@ To be pushed
 
 Next Steps
 -Zobrist Hash from FEN
--Attacking Bitboards from FEN
+-Attacking Bitboards from FEN (done)
 -Move Gen
 -Making Moves
 -Print Move list
