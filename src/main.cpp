@@ -18,14 +18,9 @@ int main() {
     int depth;
     cout << "Enter depth for perft: ";
     cin >> depth;
+    cout << endl;
 
-    
-    cout << "perft Start" << endl;
-
-    int count = 0;
-    perft(&board, depth, &count);
-    cout << "perft at depth " << depth << " : " << count << endl;
-    
+    perft(&board, depth);
 
     cin.ignore();
     cin.get();

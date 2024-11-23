@@ -1,7 +1,9 @@
 #include "SearchUtil.h"
 #include "Board.h"
 #include "MoveUtil.h"
+#include <chrono>
 #include <cstring>
+#include <iostream>
 
 using namespace std;
 
@@ -14,7 +16,8 @@ void genMoves(Board *board){
     }
 }
 
-void perft(Board *board, int depth, int *count){
+void perft_test(Board *board, int depth, int *count)
+{
     // Base condition
     if(depth == 0){
         // Count the leaf node and return
@@ -38,9 +41,25 @@ void perft(Board *board, int depth, int *count){
         // (*board).makeMove((*board).moveList.moves[i]);
 
         // Call function with updated board and further depth
-        perft(board, depth - 1, count);
+        perft_test(board, depth - 1, count);
 
         // Restore the board state
         memcpy(board, &boardCopy, sizeof(*board));
     }
+}
+
+// Function to handle perft. prints number of leaf nodes and the time taken to generate
+void perft(Board *board, int depth){
+
+    int count = 0;
+    cout << "Starting Perft" << endl;
+
+    auto start = chrono::high_resolution_clock::now();
+    perft_test(board, depth, &count);
+
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> duration = end - start;
+
+    cout << "Perft at depth " << depth << " : " << count << endl;
+    cout << "Time taken: " << duration.count() << " ms" << endl;
 }
