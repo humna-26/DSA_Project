@@ -114,6 +114,10 @@ void Board::initFromFen(char* FEN) {
         occupancyBitboards[black] |= pieceBitboards[black][piece];
     }
     occupancyBitboards[2] = occupancyBitboards[white] | occupancyBitboards[black];
+
+    attackingBitboards[white] = attackingMap(white, *this);
+    attackingBitboards[black] = attackingMap(black, *this);
+    attackingBitboards[noColour] = attackingBitboards[white] | attackingBitboards[black];
 }
 
 void Board::printBoard() const {}

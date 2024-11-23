@@ -43,7 +43,7 @@ static const uint64_t file_a_bb = 72340172838076673ULL;
 // function to print a bitboard in a 8x8 grid with some other useful info
 void print_bitboard(uint64_t bitboard);
 
-// function to get number of bits
+// function to get number of bits that are 1
 inline int getNBits(uint64_t num){
     int count = 0;
     while(num){
