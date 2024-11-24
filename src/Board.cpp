@@ -10,7 +10,6 @@ Board::Board() {
     // Initialize all bitboards to 0
     memset(pieceBitboards, 0, sizeof(pieceBitboards));
     memset(occupancyBitboards, 0, sizeof(occupancyBitboards));
-    memset(attackingBitboards, 0, sizeof(attackingBitboards));
     
     // Initialize game state
     zobristHash = 0ULL;
@@ -114,11 +113,6 @@ void Board::initFromFen(char* FEN) {
         occupancyBitboards[black] |= pieceBitboards[black][piece];
     }
     occupancyBitboards[2] = occupancyBitboards[white] | occupancyBitboards[black];
-
-    // Initialize the attackingBitboards using the attackedMap function
-    attackingBitboards[white] = attackedMap(white, *this);
-    attackingBitboards[black] = attackedMap(black, *this);
-    attackingBitboards[noColour] = attackingBitboards[white] | attackingBitboards[black];
 }
 
 void Board::printBoard() const {}

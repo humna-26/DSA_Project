@@ -9,7 +9,6 @@ class Board {
         Board();
         uint64_t pieceBitboards[2][6];
         uint64_t occupancyBitboards[3];
-        uint64_t attackingBitboards[3];
 
         uint64_t zobristHash;
 

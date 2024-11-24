@@ -72,7 +72,7 @@ Remaining 9 bits can be used for anything, in the future maybe if need for more 
 */
 
 // To get the bitboard which shows the square that are attacked by a particular side
-uint64_t attackedMap(int side, Board board);
+bool isSquareAttacked(int side, Board board, int square);
 
 // To print all the info of a move
 void printMove(int move);
