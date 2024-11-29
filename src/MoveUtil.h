@@ -20,10 +20,12 @@ Moves are encoded in 32 bit integers.
 1 bit for capture flag
 1 bit for enpassant flag
 1 bit for castling flag
+1 bit for check flag
+1 bit for checkmate flag
 3 bits for promoted piece flag
 
-Total 23 bits used out of 32.
-Remaining 9 bits can be used for anything, in the future maybe if need for more flags/info is discovered.
+Total 25 bits used out of 32.
+Remaining 7 bits can be used for anything, in the future maybe if need for more flags/info is discovered.
 */
 
 // encode move
