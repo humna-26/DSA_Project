@@ -29,11 +29,7 @@ Remaining 7 bits can be used for anything, in the future maybe if need for more 
 */
 
 // encode move
-<<<<<<< HEAD
 #define encode_move(source, target, colour, piece, promoted, capture, enpassant, castling, check, checkmate, promotedType) \
-=======
-#define encode_move(source, target, colour, piece, promoted, capture, enpassant, castling, check, checkmate,promotedType) \
->>>>>>> movelist
     (source) |            \
     ((target) << 6) |     \
     ((colour) << 12) |    \
