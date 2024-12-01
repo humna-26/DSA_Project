@@ -240,7 +240,7 @@ void Board::printBoard() const
     if (enpassantSquare == -1)
         cout << "none" << endl;
     else
-        cout << (char)(97 + (enpassantSquare % 8)) << enpassantSquare / 8 << endl;
+        cout << (char)(97 + (enpassantSquare % 8)) << 8 - enpassantSquare / 8 << endl;
     cout << "    Full-moves: " << halfMoveClocks[0] << endl;
     cout << "    Half-moves: " << halfMoveClocks[1] << endl
          << endl;
