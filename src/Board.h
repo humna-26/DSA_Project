@@ -22,6 +22,13 @@ class Board {
 
         MoveList moveList;
 
+        void generatePawnMoves(int square);
+        void generateKnightMoves(int square);
+        void generateBishopMoves(int square);
+        void generateRookMoves(int square);
+        void generateQueenMoves(int square);
+        void generateKingMoves(int square);
+
         void generateMoves();
         void makeMove(int move);
 };
