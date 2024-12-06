@@ -20,14 +20,16 @@ Moves are encoded in 32 bit integers.
 1 bit for capture flag
 1 bit for enpassant flag
 1 bit for castling flag
+1 bit for check flag
+1 bit for checkmate flag
 3 bits for promoted piece flag
 
-Total 23 bits used out of 32.
-Remaining 9 bits can be used for anything, in the future maybe if need for more flags/info is discovered.
+Total 25 bits used out of 32.
+Remaining 7 bits can be used for anything, in the future maybe if need for more flags/info is discovered.
 */
 
 // encode move
-#define encode_move(source, target, colour, piece, promoted, capture, enpassant, castling, promotedType) \
+#define encode_move(source, target, colour, piece, promoted, capture, enpassant, castling, check, checkmate, promotedType) \
     (source) |            \
     ((target) << 6) |     \
     ((colour) << 12) |    \
@@ -36,7 +38,9 @@ Remaining 9 bits can be used for anything, in the future maybe if need for more 
     ((capture) << 17) |   \
     ((enpassant) << 18) | \
     ((castling) << 19) |  \
-    ((promotedType) << 20)\
+    ((check) << 20) |  \
+    ((checkmate) << 21) |  \
+    ((promotedType) << 22)\
     
 // extract source square
 #define get_move_source(move) ((move) & 0b00000000000000000000000000111111)
@@ -62,8 +66,14 @@ Remaining 9 bits can be used for anything, in the future maybe if need for more 
 // extract castling flag
 #define get_move_castling(move) ((move) & 0b00000000000010000000000000000000)
 
+// extract check flag
+#define get_move_check(move) ((move) & 0b00000000000100000000000000000000)
+
+// extract checkmate flag
+#define get_move_checkmate(move) ((move) & 0b00000000001000000000000000000000)
+
 // extract promoted to piece type
-#define get_move_promotedType(move) (((move) & 0b00000000011100000000000000000000) >> 20)
+#define get_move_promotedType(move) (((move) & 0b00000001110000000000000000000000) >> 22)
 
 /*
 
@@ -72,7 +82,7 @@ Remaining 9 bits can be used for anything, in the future maybe if need for more 
 */
 
 // To get the bitboard which shows the square that are attacked by a particular side
-uint64_t attackedMap(int side, Board board);
+bool isSquareAttacked(int side, Board board, int square);
 
 // To print all the info of a move
 void printMove(int move);

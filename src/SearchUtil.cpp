@@ -7,15 +7,6 @@
 
 using namespace std;
 
-// dummy moves. Temporary
-void genMoves(Board *board){
-    board->moveList.count = 0;
-    for(int i = 0; i < 5; i++){
-        board->moveList.moves[board->moveList.count] = 0;
-        board->moveList.count++;
-    }
-}
-
 void perft_test(Board *board, int depth, int *count)
 {
     // Base condition
@@ -27,8 +18,8 @@ void perft_test(Board *board, int depth, int *count)
     // Save the board state
     Board boardCopy = Board();
 
-    // load dummy moves into the move list. Temporary
-    genMoves(board);
+    // Generate Moves into Move list
+    board->generateMoves();
 
     // Loop over all the legal moves
     for(int i = 0; i < (*board).moveList.count; i++){
@@ -61,5 +52,5 @@ void perft(Board *board, int depth){
     chrono::duration<double, milli> duration = end - start;
 
     cout << "Perft at depth " << depth << " : " << count << endl;
-    cout << "Time taken: " << duration.count() << " ms" << endl;
+    cout << "Time taken: " << duration.count() << " ms; " << ((double)count / duration.count()) / 1000 << " Mn/s" << endl;
 }

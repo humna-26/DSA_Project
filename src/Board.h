@@ -9,7 +9,6 @@ class Board {
         Board();
         uint64_t pieceBitboards[2][6];
         uint64_t occupancyBitboards[3];
-        uint64_t attackingBitboards[3];
 
         uint64_t zobristHash;
 
@@ -22,6 +21,13 @@ class Board {
         void printBoard() const;
 
         MoveList moveList;
+
+        void generatePawnMoves(int square);
+        void generateKnightMoves(int square);
+        void generateBishopMoves(int square);
+        void generateRookMoves(int square);
+        void generateQueenMoves(int square);
+        void generateKingMoves(int square);
 
         void generateMoves();
         void makeMove(int move);
