@@ -44,6 +44,8 @@ constexpr int passedPawnBonus = 50;
 constexpr int isolatedPawnBonus = -40;
 // To be multiplied by the number of squares attacked
 constexpr int spaceBonus = 5;
+constexpr int kingSafetyBonus = 5;
+constexpr int canCastleBonus = 20;
 
 
 /*
