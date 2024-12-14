@@ -300,13 +300,8 @@ Zobrist Keys
 */
 
 uint64_t pieceSquareKeys[2][6][64];
-<<<<<<< HEAD
-uint64_t enpassantKeys[8];
-uint64_t castleRightKeys[4];
-=======
 uint64_t castleRightKeys[4];
 uint64_t enpassantKeys[8];
->>>>>>> perft
 uint64_t sideToMoveKey;
 
 // Wania

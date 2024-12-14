@@ -19,12 +19,9 @@ add_executable(ChessProject
     ${SRC_DIR}/Board.cpp
     ${SRC_DIR}/MoveUtil.cpp
     ${SRC_DIR}/MoveList.cpp
-<<<<<<< HEAD
     ${SRC_DIR}/Evaluation.cpp
     ${SRC_DIR}/uci.cpp
-=======
     ${SRC_DIR}/SearchUtil.cpp
->>>>>>> perft
 )
 
 # Include header files from the src directory
@@ -32,6 +29,3 @@ include_directories(${SRC_DIR})
 
 # Set output directory for the final executable
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
-
-set(CMAKE_BUILD_TYPE Debug)
-
