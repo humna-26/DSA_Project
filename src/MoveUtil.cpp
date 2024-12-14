@@ -1,6 +1,10 @@
 #include "MoveUtil.h"
 #include "PieceUtil.h"
 #include "Board.h"
+#include <string>
+#include <iostream>
+
+using namespace std;
 
 /*
 
@@ -8,36 +12,73 @@
 
 */
 
-// Function to return the squares attacked by the given side. side can be only white or black, not noColour
-uint64_t attackedMap(int side, Board board){
-    // init bitboard to 0
-    uint64_t result = 0ULL;
+// Function to tell if given square is attacked by the given side. wont work with noColour.
+// Will return true if square has a piece of a particular side, and the same side is given.
+// e.g if e4 has a white queen, and we are asking if white is attacking e4, if any other white piece is indeed attacking e4, function will return true.
+// This does not mean the piece can actually move there
+// This shouldn't be a problem as there is no point in asking if white is attacking its own queen.
+bool isSquareAttacked(int side, Board board, int square)
+{
+    // Basic approach is to AND the bitboard of all pieces with their attack maps at the given square one by one.
+    // e.g for a knight. for the given sqaure, the knight can move to some particular squares. if there is a knight on one of those squares of the given side, then the given square is attacked
+    // same method for all pieces
 
-    // OR the bitboard by all the attack maps of given colour
-    for(int square = 0; square < 64; square++){
-        for(int piece = 0; piece < 6; piece++){
-            if(get_bit(board.pieceBitboards[side][piece], square)){
-                switch(piece){
-                    case(pawn): result |= pawnAttackMap[side][square]; continue;
-                    case(knight): result |= knightAttackMap[square]; continue;
-                    case(king): result |= kingAttackMap[square]; continue;
-                    // Use both sides as blockers
-                    case(bishop): result |= getBishopAttackMap(square, board.occupancyBitboards[noColour]); continue;
-                    case(rook): result |= getRookAttackMap(square, board.occupancyBitboards[noColour]); continue;
-                    case(queen): result |= getQueenAttackMap(square, board.occupancyBitboards[noColour]); continue;
-                }
-            }
-        }
-    }
+    // Check for pawn attack
+    if (board.pieceBitboards[side][pawn] & pawnAttackMap[side == white ? black : white][square])
+        return 1;
 
-    // Because the blockers above are all assumed to be enemies, currently in the result BB, we can attack our own pieces.
-    // To fix this, we AND the result with the NOT of the side's piece occupancy.
-    // This makes it so we only get attacks on the squares where our pieces are not present.
-    result &= ~board.occupancyBitboards[side];
+    // Check for knight attack
+    if (board.pieceBitboards[side][knight] & knightAttackMap[square])
+        return 1;
 
-    return result;
+    // Check for king attack
+    if (board.pieceBitboards[side][king] & kingAttackMap[square])
+        return 1;
+
+    // Check for bishop attack
+    if (board.pieceBitboards[side][bishop] & getBishopAttackMap(square, board.occupancyBitboards[noColour]))
+        return 1;
+
+    // Check for rook attack
+    if (board.pieceBitboards[side][rook] & getRookAttackMap(square, board.occupancyBitboards[noColour]))
+        return 1;
+
+    // Check for queen attack
+    if (board.pieceBitboards[side][queen] & getQueenAttackMap(square, board.occupancyBitboards[noColour]))
+        return 1;
+
+    // False if nothing is attacking the square
+    return false;
 }
 
-void printMove(int move){
-    // To be filled
+void printMove(int move)
+{
+    string str = "";
+    str += ((char)('a' + get_move_source(move) % 8));
+    str += (char)('0' + 8 - get_move_source(move) / 8);
+    str += ((char)('a' + get_move_target(move) % 8));
+    str += (char)('0' + 8 - get_move_target(move) / 8);
+    if (get_move_capture(move)) 
+        str += 'x';
+    if (get_move_promoted(move) && !get_move_piece(move)) {
+        switch(get_move_promotedType(move)) {
+            case knight:
+                str += (get_move_colour(move) ? 'k' : 'K');
+                break;
+            case queen:
+                str += (get_move_colour(move) ? 'q' : 'Q');
+                break;
+            case bishop:
+                str += (get_move_colour(move) ? 'b' : 'B');
+                break;
+            case rook:
+                str += (get_move_colour(move) ? 'r' : 'R');
+                break; 
+        }
+    }
+    if (get_move_checkmate(move))
+        str += '#';
+    else if (get_move_check(move))
+        str += '+';
+    cout << str << endl;
 }

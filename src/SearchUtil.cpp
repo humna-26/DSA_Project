@@ -29,7 +29,7 @@ void perft_test(Board *board, int depth, int *count)
         // Apply the i'th move to the board
         // Need the makeMove function for this to be done properly
 
-        // (*board).makeMove((*board).moveList.moves[i]);
+        (*board).makeMove((*board).moveList.moves[i]);
 
         // Call function with updated board and further depth
         perft_test(board, depth - 1, count);
