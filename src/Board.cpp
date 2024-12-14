@@ -519,7 +519,7 @@ bool Board::makeMove(int move)
     if(piece == rook && sourceSquare == h8) castleRights &= 0b1011; // Black kingside rook
 
     // if our king is in check after the move, it was illegal. restore position and return false.
-    if(isSquareAttacked(1-sideToMove, *this, getLSBIndex(this->pieceBitboards[1-sideToMove][king]))){
+    if(isSquareAttacked(1-side, *this, getLSBIndex(this->pieceBitboards[side][king]))){
         memcpy(this, &original, sizeof(Board));
         return false;
     }

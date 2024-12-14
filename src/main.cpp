@@ -15,10 +15,7 @@ int main()
     char fen[] = "r1bqkbnr/pppp1ppp/2n5/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 1";
 
     Board board = Board();
-    board.initFromFen(fen);
-
-    board.printBoard();
-    cout << evaluatePosition(board);
+    board.initFromFen(startpos);
 
     cin.clear();
     cin.get();
