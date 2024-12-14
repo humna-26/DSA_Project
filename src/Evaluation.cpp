@@ -6,13 +6,46 @@
 using namespace std;
 
 inline int materialValue(Board board){
-    // To be 
-    return 0;
+    int scores[] = {0, 0};
+
+    for(int side = white; side <= black; side++){
+        for(int piece = pawn; piece <= king; piece++){
+            while(board.pieceBitboards[side][piece]){
+                int square = getLSBIndex(board.pieceBitboards[side][piece]);
+                pop_bit(board.pieceBitboards[side][piece], square);
+
+                scores[side] += pieceValues[piece];
+            }
+        }
+    }
+    return scores[0] - scores[1];
 }
 
 inline int positionalValue(Board board){
-    // To be filled
-    return 0;
+    int scores[] ={0, 0};
+    
+    for(int side = white; side <= black; side++){
+        // Pawns
+        while(board.pieceBitboards[side][pawn]){
+            int square =  getLSBIndex(board.pieceBitboards[side][pawn]);
+            pop_bit(board.pieceBitboards[side][pawn], square);
+            scores[side] += pawnPositionalValue[side?(63-square):square];
+        }
+        // Kings
+        while(board.pieceBitboards[side][king]){
+            int square =  getLSBIndex(board.pieceBitboards[side][king]);
+            pop_bit(board.pieceBitboards[side][king], square);
+            scores[side] += kingPositionalValue[side?(63-square):square];
+        }
+        // Knights
+        while(board.pieceBitboards[side][knight]){
+            int square =  getLSBIndex(board.pieceBitboards[side][knight]);
+            pop_bit(board.pieceBitboards[side][knight], square);
+            scores[side] += knightPositionalValue[square];
+        }
+    }
+
+    return scores[0] - scores[1];
 }
 
 inline int pawnStructure(Board board){
@@ -37,8 +70,43 @@ inline int pawnStructure(Board board){
 }
 
 inline int passedIsolatedPawns(Board board){
-    // To be filled
-    return 0;
+    Board bcpy = board;
+    int scores[] = {0, 0};
+
+    for(int side = 0; side <= black; side++){
+        while(bcpy.pieceBitboards[side][pawn]){
+            int square = getLSBIndex(bcpy.pieceBitboards[side][pawn]);
+            pop_bit(bcpy.pieceBitboards[side][pawn], square);
+
+            // Check for doubled
+            int64_t fileMask = file_a_bb << (square % 8);
+            // popping and then setting because the filemask would include the pawn we are checking for
+            pop_bit(fileMask, square);
+            scores[side] += (fileMask & board.pieceBitboards[side][pawn]) ? doubledPawnBonus : 0;
+            set_bit(fileMask, square);
+
+            // Check for isolated
+            if((square % 8) !=7) fileMask |= fileMask << 1;
+            if((square % 8) !=0) fileMask |= fileMask >> 1;
+            
+            // popping and then setting because the filemask would include the pawn we are checking for
+            pop_bit(board.pieceBitboards[side][pawn], square);
+            scores[side] += (fileMask & board.pieceBitboards[side][pawn]) ? 0 : isolatedPawnBonus;
+            set_bit(board.pieceBitboards[side][pawn], square);
+
+            // Check for passed
+            uint64_t mask = rank_1_bb;
+            mask >>= (((63 - square) / 8) * 8);
+            mask |= mask >> 8; mask |= mask >> 8; mask |= mask >> 8; mask |= mask >> 8; mask |= mask >> 8; mask |= mask >> 8; mask |= mask >> 8;
+            mask &= fileMask; // mask ready to check for white passed pawns
+
+            mask = side ? (~mask & fileMask) : mask; // change to black mask if side is black
+
+            scores[side] += (mask & board.pieceBitboards[1-side][pawn]) ? 0 : passedPawnBonus;
+        }
+    }
+
+    return scores[0] - scores[1];
 }
 
 inline int spaceAdvantage(Board board){
@@ -191,9 +259,9 @@ int evaluatePosition(Board board){
 
     eval += materialValue(board);
     eval += positionalValue(board);
-    //eval += pawnStructure(board);
+    eval += pawnStructure(board);
     eval += passedIsolatedPawns(board);
-    //eval += spaceAdvantage(board);
+    eval += spaceAdvantage(board);
     eval += bishopPair(board);
     eval += kingSafety(board);
 

@@ -30,7 +30,7 @@ class Board {
         void generateKingMoves(int square);
 
         void generateMoves();
-        void makeMove(int move);
+        bool makeMove(int move);
 };
 
 #endif
