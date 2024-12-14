@@ -3,6 +3,9 @@
 
 #include "Board.h"
 #include "PieceUtil.h"
+#include <string>
+
+using namespace std;
 
 /*
 
@@ -85,6 +88,6 @@ Remaining 7 bits can be used for anything, in the future maybe if need for more 
 bool isSquareAttacked(int side, Board board, int square);
 
 // To print all the info of a move
-void printMove(int move);
+string printMove(int move);
 
 #endif
