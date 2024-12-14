@@ -1,5 +1,7 @@
 #include "MoveList.h"
 #include "MoveUtil.h"
+#include <iostream>
+using namespace std;
 
 // constructor to init count. No need to init array
 MoveList::MoveList(){
@@ -16,5 +18,5 @@ void MoveList::addMove(int move){
 // Function to print all moves in the list
 void MoveList::printList(){
     for (int i = 0; i < count; i++) 
-        printMove(moves[i]);
+        cout << printMove(moves[i]) << endl;
 }

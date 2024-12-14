@@ -247,22 +247,22 @@ void Board::printBoard() const
 }
 
 // helper functions to be used in generateMoves
-void Board::generatePawnMoves(int square) {
-    uint64_t attacks = pawnAttackMap[sideToMove][square];
+inline void generatePawnMoves(int square, Board *board) {
+    uint64_t attacks = pawnAttackMap[board->sideToMove][square];
     uint64_t moves = 0ULL;
     int rank = square / 8;
-    int startRank = (sideToMove == white) ? 6 : 1;
-    int direction = (sideToMove == white) ? -8 : 8;
+    int startRank = (board->sideToMove == white) ? 6 : 1;
+    int direction = (board->sideToMove == white) ? -8 : 8;
     
     // Regular pawn moves (one square forward)
     int targetSquare = square + direction;
-    if (targetSquare >= 0 && targetSquare < 64 && !get_bit(occupancyBitboards[2], targetSquare)) {
+    if (targetSquare >= 0 && targetSquare < 64 && !get_bit(board->occupancyBitboards[2], targetSquare)) {
         moves |= (1ULL << targetSquare);
         
         // Double pawn moves (two squares forward from starting position)
         if (rank == startRank) {
             targetSquare = square + 2 * direction;
-            if (!get_bit(occupancyBitboards[2], targetSquare)) {
+            if (!get_bit(board->occupancyBitboards[2], targetSquare)) {
                 moves |= (1ULL << targetSquare);
             }
         }
@@ -271,22 +271,22 @@ void Board::generatePawnMoves(int square) {
     // Handle captures
     while (attacks) {
         targetSquare = getLSBIndex(attacks);
-        if (get_bit(occupancyBitboards[1 - sideToMove], targetSquare)) {
+        if (get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare)) {
             // Check for promotion
-            if ((sideToMove == white && targetSquare < 8) || 
-                (sideToMove == black && targetSquare >= 56)) {
+            if ((board->sideToMove == white && targetSquare < 8) || 
+                (board->sideToMove == black && targetSquare >= 56)) {
                 // Add promotions
-                moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, true, false, false, false, false, queen));
-                moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, true, false, false, false, false, rook));
-                moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, true, false, false, false, false, bishop));
-                moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, true, false, false, false, false, knight));
+                board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, true, false, false, false, false, queen));
+                board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, true, false, false, false, false, rook));
+                board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, true, false, false, false, false, bishop));
+                board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, true, false, false, false, false, knight));
             } else {
-                moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, false, true, false, false, false, false, noPiece));
+                board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, false, true, false, false, false, false, noPiece));
             }
         }
         // Handle en passant
-        else if (targetSquare == enpassantSquare) {
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, false, true, true, false, false, false, noPiece));
+        else if (targetSquare == board->enpassantSquare) {
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, false, true, true, false, false, false, noPiece));
         }
         pop_bit(attacks, targetSquare);
     }
@@ -294,101 +294,110 @@ void Board::generatePawnMoves(int square) {
     // Handle quiet pawn moves and promotions
     while (moves) {
         targetSquare = getLSBIndex(moves);
-        if ((sideToMove == white && targetSquare < 8) || 
-            (sideToMove == black && targetSquare >= 56)) {
+        if ((board->sideToMove == white && targetSquare < 8) || 
+            (board->sideToMove == black && targetSquare >= 56)) {
             // Add promotions
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, false, false, false, false, false, queen));
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, false, false, false, false, false, rook));
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, false, false, false, false, false, bishop));
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, true, false, false, false, false, false, knight));
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, false, false, false, false, false, queen));
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, false, false, false, false, false, rook));
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, false, false, false, false, false, bishop));
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, true, false, false, false, false, false, knight));
         } else {
-            moveList.addMove(encode_move(square, targetSquare, sideToMove, pawn, false, false, false, false, false, false, noPiece));
+            board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, pawn, false, false, false, false, false, false, noPiece));
         }
         pop_bit(moves, targetSquare);
     }
 }
 
-void Board::generateKnightMoves(int square) {
+inline void generateKnightMoves(int square, Board *board) {
     uint64_t attacks = knightAttackMap[square];
-    attacks &= ~occupancyBitboards[sideToMove];  // Remove friendly pieces
+    attacks &= ~board->occupancyBitboards[board->sideToMove];  // Remove friendly pieces
 
     while (attacks) {
         int targetSquare = getLSBIndex(attacks);
-        bool isCapture = get_bit(occupancyBitboards[1 - sideToMove], targetSquare);
+        bool isCapture = get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare);
         
-        moveList.addMove(encode_move(square, targetSquare, sideToMove, knight, false, isCapture, false, false, false, false, noPiece));
+        board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, knight, false, isCapture, false, false, false, false, noPiece));
         pop_bit(attacks, targetSquare);
     }
 }
 
-void Board::generateBishopMoves(int square) {
-    uint64_t attacks = getBishopAttackMap(square, occupancyBitboards[2]);
-    attacks &= ~occupancyBitboards[sideToMove];
+inline void generateBishopMoves(int square, Board *board) {
+    uint64_t attacks = getBishopAttackMap(square, board->occupancyBitboards[2]);
+    attacks &= ~board->occupancyBitboards[board->sideToMove];
 
     while (attacks) {
         int targetSquare = getLSBIndex(attacks);
-        bool isCapture = get_bit(occupancyBitboards[1 - sideToMove], targetSquare);
+        bool isCapture = get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare);
         
-        moveList.addMove(encode_move(square, targetSquare, sideToMove, bishop, false, isCapture, false, false, false, false, noPiece));
+        board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, bishop, false, isCapture, false, false, false, false, noPiece));
         pop_bit(attacks, targetSquare);
     }
 }
 
-void Board::generateRookMoves(int square) {
-    uint64_t attacks = getRookAttackMap(square, occupancyBitboards[2]);
-    attacks &= ~occupancyBitboards[sideToMove];
+inline void generateRookMoves(int square, Board *board) {
+    uint64_t attacks = getRookAttackMap(square, board->occupancyBitboards[2]);
+    attacks &= ~board->occupancyBitboards[board->sideToMove];
 
     while (attacks) {
         int targetSquare = getLSBIndex(attacks);
-        bool isCapture = get_bit(occupancyBitboards[1 - sideToMove], targetSquare);
+        bool isCapture = get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare);
         
-        moveList.addMove(encode_move(square, targetSquare, sideToMove, rook, false, isCapture, false, false, false, false, noPiece));
+        board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, rook, false, isCapture, false, false, false, false, noPiece));
         pop_bit(attacks, targetSquare);
     }
 }
 
-void Board::generateQueenMoves(int square) {
-    uint64_t attacks = getQueenAttackMap(square, occupancyBitboards[2]);
-    attacks &= ~occupancyBitboards[sideToMove];
+inline void generateQueenMoves(int square, Board *board) {
+    uint64_t attacks = getQueenAttackMap(square, board->occupancyBitboards[2]);
+    attacks &= ~board->occupancyBitboards[board->sideToMove];
 
     while (attacks) {
         int targetSquare = getLSBIndex(attacks);
-        bool isCapture = get_bit(occupancyBitboards[1 - sideToMove], targetSquare);
+        bool isCapture = get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare);
         
-        moveList.addMove(encode_move(square, targetSquare, sideToMove, queen, false, isCapture, false, false, false, false, noPiece));
+        board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, queen, false, isCapture, false, false, false, false, noPiece));
         pop_bit(attacks, targetSquare);
     }
 }
 
-void Board::generateKingMoves(int square) {
+inline void generateKingMoves(int square, Board *board) {
     uint64_t attacks = kingAttackMap[square];
-    attacks &= ~occupancyBitboards[sideToMove];
+    attacks &= ~board->occupancyBitboards[board->sideToMove];
 
     // Normal moves
     while (attacks) {
         int targetSquare = getLSBIndex(attacks);
-        bool isCapture = get_bit(occupancyBitboards[1 - sideToMove], targetSquare);
+        bool isCapture = get_bit(board->occupancyBitboards[1 - board->sideToMove], targetSquare);
         
-        moveList.addMove(encode_move(square, targetSquare, sideToMove, king, false, isCapture, false, false, false, false, noPiece));
+        board->moveList.addMove(encode_move(square, targetSquare, board->sideToMove, king, false, isCapture, false, false, false, false, noPiece));
         pop_bit(attacks, targetSquare);
     }
 
+    // No castling if king is in check
+    if(isSquareAttacked(1-board->sideToMove, *board, getLSBIndex(board->pieceBitboards[board->sideToMove][king])))
+        return;
+
     // Castling moves
-    if (sideToMove == white) {
-        if (get_bit(castleRights, 0) && !get_bit(occupancyBitboards[2], f1) && !get_bit(occupancyBitboards[2], g1)) {
-            moveList.addMove(encode_move(e1, g1, white, king, false, false, false, true, false, false, noPiece));
+    if (board->sideToMove == white) {
+        if (get_bit(board->castleRights, 0) && !get_bit(board->occupancyBitboards[2], f1) && !get_bit(board->occupancyBitboards[2], g1)) {
+            if(!isSquareAttacked(1-board->sideToMove, *board, f1) && !isSquareAttacked(1-board->sideToMove, *board, g1)){
+                board->moveList.addMove(encode_move(e1, g1, white, king, false, false, false, true, false, false, noPiece));
+            }
         }
-        if (get_bit(castleRights, 1) && !get_bit(occupancyBitboards[2], d1) && 
-            !get_bit(occupancyBitboards[2], c1) && !get_bit(occupancyBitboards[2], b1)) {
-            moveList.addMove(encode_move(e1, c1, white, king, false, false, false, true, false, false, noPiece));
+        if (get_bit(board->castleRights, 1) && !get_bit(board->occupancyBitboards[2], d1) && 
+            !get_bit(board->occupancyBitboards[2], c1) && !get_bit(board->occupancyBitboards[2], b1)) {
+                if(!isSquareAttacked(1-board->sideToMove, *board, c1) && !isSquareAttacked(1- board->sideToMove, *board, d1))
+                    board->moveList.addMove(encode_move(e1, c1, white, king, false, false, false, true, false, false, noPiece));
         }
     } else {
-        if (get_bit(castleRights, 2) && !get_bit(occupancyBitboards[2], f8) && !get_bit(occupancyBitboards[2], g8)) {
-            moveList.addMove(encode_move(e8, g8, black, king, false, false, false, true, false, false, noPiece));
+        if (get_bit(board->castleRights, 2) && !get_bit(board->occupancyBitboards[2], f8) && !get_bit(board->occupancyBitboards[2], g8)) {
+            if(!isSquareAttacked(1-board->sideToMove, *board, f8) && !isSquareAttacked(1-board->sideToMove, *board, g8))
+                board->moveList.addMove(encode_move(e8, g8, black, king, false, false, false, true, false, false, noPiece));
         }
-        if (get_bit(castleRights, 3) && !get_bit(occupancyBitboards[2], d8) && 
-            !get_bit(occupancyBitboards[2], c8) && !get_bit(occupancyBitboards[2], b8)) {
-            moveList.addMove(encode_move(e8, c8, black, king, false, false, false, true, false, false, noPiece));
+        if (get_bit(board->castleRights, 3) && !get_bit(board->occupancyBitboards[2], d8) && 
+            !get_bit(board->occupancyBitboards[2], c8) && !get_bit(board->occupancyBitboards[2], b8)) {
+                if(!isSquareAttacked(1-board->sideToMove, *board, c8) && !isSquareAttacked(1-board->sideToMove, *board, d8))
+                    board->moveList.addMove(encode_move(e8, c8, black, king, false, false, false, true, false, false, noPiece));
         }
     }
 }
@@ -405,22 +414,22 @@ void Board::generateMoves() {
             
             switch (piece) {
                 case pawn:
-                    generatePawnMoves(square);
+                    generatePawnMoves(square, this);
                     break;
                 case knight:
-                    generateKnightMoves(square);
+                    generateKnightMoves(square, this);
                     break;
                 case bishop:
-                    generateBishopMoves(square);
+                    generateBishopMoves(square, this);
                     break;
                 case rook:
-                    generateRookMoves(square);
+                    generateRookMoves(square, this);
                     break;
                 case queen:
-                    generateQueenMoves(square);
+                    generateQueenMoves(square, this);
                     break;
                 case king:
-                    generateKingMoves(square);
+                    generateKingMoves(square, this);
                     break;
             }
             
@@ -440,13 +449,13 @@ bool Board::makeMove(int move)
     int sourceSquare = get_move_source(move);
     int targetSquare = get_move_target(move);
     int piece = get_move_piece(move);
-    int side = get_move_colour(move);
+    int side = get_move_colour(move) > 0;
 
     // Make all the updates to board variables
     
     // Update piece bitboard
-    pop_bit(this->pieceBitboards[side][piece], sourceSquare);
-    set_bit(this->pieceBitboards[side][piece], targetSquare);
+    pop_bit(pieceBitboards[side][piece], sourceSquare);
+    set_bit(pieceBitboards[side][piece], targetSquare);
 
     // Update occupancy bitboard
     pop_bit(this->occupancyBitboards[side], sourceSquare);
@@ -461,25 +470,39 @@ bool Board::makeMove(int move)
     // if move was capture, remove the opposing side's piece from bitboard
     if(get_move_capture(move) && !get_move_enpassant(move)){
         for(int i = 0; i < 6; i++){
-            if(get_bit(this->pieceBitboards[1-side][i], targetSquare)){
-                pop_bit(this->pieceBitboards[1-side][piece], targetSquare);
+            if(get_bit(pieceBitboards[1-side][i], targetSquare)){
+                pop_bit(pieceBitboards[1-side][i], targetSquare);
                 this->zobristHash ^= pieceSquareKeys[1-side][piece][targetSquare];
                 break;
             }
         }
         pop_bit(this->occupancyBitboards[1-side], targetSquare);
+
+        // handle castling rights if rook is taken
+        if(targetSquare == a1) castleRights &= 0b1101; // White queenside rook
+        if(targetSquare == h1) castleRights &= 0b1110; // White kingside rook
+        if(targetSquare == a8) castleRights &= 0b0111; // Black queenside rook
+        if(targetSquare == h8) castleRights &= 0b1011; // Black kingside rook
     }
     // enpassant
-    else {
-        (side == white) ? pop_bit(this->pieceBitboards[black][pawn], targetSquare + 8) : pop_bit(this->pieceBitboards[white][pawn], targetSquare - 8);
+    else if (get_move_enpassant(move)){
+        if(side == white){
+            pop_bit(this->pieceBitboards[black][pawn], targetSquare + 8);
+            pop_bit(occupancyBitboards[1-side], targetSquare + 8);
+            pop_bit(occupancyBitboards[2], targetSquare + 8);
+        } else {
+            pop_bit(this->pieceBitboards[white][pawn], targetSquare - 8);
+            pop_bit(occupancyBitboards[1-side], targetSquare - 8);
+            pop_bit(occupancyBitboards[2], targetSquare - 8);
+        }
         zobristHash ^= pieceSquareKeys[1-side][pawn][side ? targetSquare + 8 : targetSquare - 8];
     }
 
     zobristHash ^= enpassantKeys[enpassantSquare % 8];
-    enpassantSquare = noSquare;
+    enpassantSquare = -1;
 
     // if move was double pawn push, set enpassant square
-    if(piece == pawn && abs(sourceSquare-targetSquare) > 8){
+    if(piece == pawn && abs(sourceSquare-targetSquare) > 15){
         (side == white) ? enpassantSquare = targetSquare + 8 : enpassantSquare = targetSquare - 8;
         zobristHash ^= enpassantKeys[enpassantSquare % 8];
     }
@@ -502,24 +525,45 @@ bool Board::makeMove(int move)
     // in zobrist keys array it is {K, Q, k, q}
     if(get_move_castling(move)){
         switch(targetSquare){
-            case c8: pop_bit(pieceBitboards[side][rook], a8); set_bit(pieceBitboards[side][rook], d8); zobristHash ^= pieceSquareKeys[side][rook][a8];zobristHash ^= pieceSquareKeys[side][rook][d8];break;
-            case c1: pop_bit(pieceBitboards[side][rook], a1); set_bit(pieceBitboards[side][rook], d1); zobristHash ^= pieceSquareKeys[side][rook][a1];zobristHash ^= pieceSquareKeys[side][rook][d1];break;
-            case h8: pop_bit(pieceBitboards[side][rook], h8); set_bit(pieceBitboards[side][rook], f8); zobristHash ^= pieceSquareKeys[side][rook][h8];zobristHash ^= pieceSquareKeys[side][rook][f8];break;
-            case h1: pop_bit(pieceBitboards[side][rook], h1); set_bit(pieceBitboards[side][rook], f1); zobristHash ^= pieceSquareKeys[side][rook][h1];zobristHash ^= pieceSquareKeys[side][rook][f1];break;
+            case c8: 
+                pop_bit(pieceBitboards[side][rook], a8); set_bit(pieceBitboards[side][rook], d8);
+                pop_bit(occupancyBitboards[side], a8); set_bit(occupancyBitboards[side], d8);
+                pop_bit(occupancyBitboards[2], a8); set_bit(occupancyBitboards[2], d8);
+                zobristHash ^= pieceSquareKeys[side][rook][a8]; zobristHash ^= pieceSquareKeys[side][rook][d8];
+                break;
+            case c1: 
+                pop_bit(pieceBitboards[side][rook], a1); set_bit(pieceBitboards[side][rook], d1);
+                pop_bit(occupancyBitboards[side], a1); set_bit(occupancyBitboards[side], d1);
+                pop_bit(occupancyBitboards[2], a1); set_bit(occupancyBitboards[2], d1);
+                zobristHash ^= pieceSquareKeys[side][rook][a1]; zobristHash ^= pieceSquareKeys[side][rook][d1];
+                break;
+            case g8: 
+                pop_bit(pieceBitboards[side][rook], h8); set_bit(pieceBitboards[side][rook], f8);
+                pop_bit(occupancyBitboards[side], h8); set_bit(occupancyBitboards[side], f8);
+                pop_bit(occupancyBitboards[2], h8); set_bit(occupancyBitboards[2], f8);
+                zobristHash ^= pieceSquareKeys[side][rook][h8]; zobristHash ^= pieceSquareKeys[side][rook][f8];
+                break;
+            case g1:
+                pop_bit(pieceBitboards[side][rook], h1); set_bit(pieceBitboards[side][rook], f1);
+                pop_bit(occupancyBitboards[side], h1); set_bit(occupancyBitboards[side], f1);
+                pop_bit(occupancyBitboards[2], h1); set_bit(occupancyBitboards[2], f1);
+                zobristHash ^= pieceSquareKeys[side][rook][h1]; zobristHash ^= pieceSquareKeys[side][rook][f1];
+                break;
         }
         zobristHash ^= castleRightKeys[side];
         zobristHash ^= castleRightKeys[side+1];
     }
+    // if king is moved, remove that side's castling rights entirely
     if(piece == king){
-        castleRights &= side ? ~(12) : ~(3);
+        castleRights &= ((side==black) ? 0b0011 : 0b1100);
     }
+
     if(piece == rook && sourceSquare == a1) castleRights &= 0b1101; // White queenside rook
     if(piece == rook && sourceSquare == h1) castleRights &= 0b1110; // White kingside rook
     if(piece == rook && sourceSquare == a8) castleRights &= 0b0111; // Black queenside rook
     if(piece == rook && sourceSquare == h8) castleRights &= 0b1011; // Black kingside rook
-
     // if our king is in check after the move, it was illegal. restore position and return false.
-    if(isSquareAttacked(1-sideToMove, *this, getLSBIndex(this->pieceBitboards[1-sideToMove][king]))){
+    if(isSquareAttacked(1-side, *this, getLSBIndex(this->pieceBitboards[side][king]))){
         memcpy(this, &original, sizeof(Board));
         return false;
     }

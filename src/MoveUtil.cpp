@@ -51,15 +51,15 @@ bool isSquareAttacked(int side, Board board, int square)
     return false;
 }
 
-void printMove(int move)
+string printMove(int move)
 {
     string str = "";
     str += ((char)('a' + get_move_source(move) % 8));
     str += (char)('0' + 8 - get_move_source(move) / 8);
-    str += ((char)('a' + get_move_target(move) % 8));
-    str += (char)('0' + 8 - get_move_target(move) / 8);
     if (get_move_capture(move)) 
         str += 'x';
+    str += ((char)('a' + get_move_target(move) % 8));
+    str += (char)('0' + 8 - get_move_target(move) / 8);
     if (get_move_promoted(move) && !get_move_piece(move)) {
         switch(get_move_promotedType(move)) {
             case knight:
@@ -80,5 +80,6 @@ void printMove(int move)
         str += '#';
     else if (get_move_check(move))
         str += '+';
-    cout << str << endl;
+    
+    return str;
 }
