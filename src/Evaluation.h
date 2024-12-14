@@ -31,7 +31,6 @@ constexpr int pawnPositionalValue[64] = {
     0, 0, 0, 0, 0, 0, 0, 0      // Rank 1
 };
 
-<<<<<<< HEAD
 // Bonus for knights according to how close to center they are
 constexpr int knightPositionalValue[64] = {
     0,  10,  10,  10,  10,  10,  10,  0,    // Rank 8
@@ -56,8 +55,6 @@ constexpr int kingPositionalValue[64] = {
     20, 20, 0, 0, 0, 0, 20, 20   // Rank 1
 };
 
-=======
->>>>>>> search
 
 // All Values are to be added for white, and subtracted for black
 
@@ -68,7 +65,6 @@ constexpr int bishopPairBonus = 80;
 // To be added for each passed pawn
 constexpr int passedPawnBonus = 50;
 // To be added for each isolated pawn
-<<<<<<< HEAD
 constexpr int isolatedPawnBonus = -30;
 // To be added for each doubled pawn
 constexpr int doubledPawnBonus = -8;
@@ -78,11 +74,6 @@ constexpr int spaceBonus = 5;
 constexpr int kingSafetyBonus = 5;
 // To be added if king can castle
 constexpr int canCastleBonus = 20;
-=======
-constexpr int isolatedPawnBonus = -40;
-// To be multiplied by the number of squares attacked
-constexpr int spaceBonus = 5;
->>>>>>> search
 
 
 /*

@@ -71,12 +71,8 @@ void perft(Board *board, int depth){
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double, milli> duration = end - start;
 
-<<<<<<< HEAD
-    cout << endl << "Perft at depth " << depth << " : " << countn << endl;
+    cout << "Perft at depth " << depth << " : " << countn << endl;
     cout << "Time taken: " << duration.count() << " ms; " << ((double)countn / duration.count()) / 1000 << " Mn/s" << endl;
-=======
-    cout << "Perft at depth " << depth << " : " << count << endl;
-    cout << "Time taken: " << duration.count() << " ms; " << ((double)count / duration.count()) / 1000 << " Mn/s" << endl;
 }
 
 // Negamax search with alpha-beta pruning
@@ -158,5 +154,4 @@ int findBestMove(Board board){
     negamax(board, INT_MAX, INT_MIN, 5, &move);
 
     return move;
->>>>>>> search
 }
