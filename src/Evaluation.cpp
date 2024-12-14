@@ -1,6 +1,7 @@
 #include "evaluation.h"
 #include "Board.h"
 #include "PieceUtil.h"
+<<<<<<< HEAD
 #include <cstdint>
 #include <iostream>
 using namespace std;
@@ -252,6 +253,37 @@ inline int kingSafety(Board board){
     blackScore += ((board.castleRights & 12) > 0) ? canCastleBonus : 0;
 
     return whiteScore - blackScore;
+=======
+
+inline int materialValue(Board board){
+    // To be 
+    return 0;
+}
+
+inline int positionalValue(Board board){
+    // To be filled
+    return 0;
+}
+
+inline int pawnStructure(Board board){
+    // To be filled
+    return 0;
+}
+
+inline int passedIsolatedPawns(Board board){
+    // To be filled
+    return 0;
+}
+
+inline int spaceAdvantage(Board board){
+    // To be filled
+    return 0;
+}
+
+inline int bishopPair(Board board){
+    // To be filled
+    return 0;
+>>>>>>> search
 }
 
 int evaluatePosition(Board board){
@@ -263,7 +295,10 @@ int evaluatePosition(Board board){
     eval += passedIsolatedPawns(board);
     eval += spaceAdvantage(board);
     eval += bishopPair(board);
+<<<<<<< HEAD
     eval += kingSafety(board);
+=======
+>>>>>>> search
 
     return eval;
 }
