@@ -430,7 +430,99 @@ void Board::generateMoves() {
 }
 
 // Makes a move by updating the board accordingly
-void Board::makeMove(int move)
+bool Board::makeMove(int move)
 {
-    // To be filled
+    // Save copy of board
+    Board original;
+    memcpy(&original, this, sizeof(Board));
+
+    // Move info
+    int sourceSquare = get_move_source(move);
+    int targetSquare = get_move_target(move);
+    int piece = get_move_piece(move);
+    int side = get_move_colour(move);
+
+    // Make all the updates to board variables
+    
+    // Update piece bitboard
+    pop_bit(this->pieceBitboards[side][piece], sourceSquare);
+    set_bit(this->pieceBitboards[side][piece], targetSquare);
+
+    // Update occupancy bitboard
+    pop_bit(this->occupancyBitboards[side], sourceSquare);
+    set_bit(this->occupancyBitboards[side], targetSquare);
+    pop_bit(this->occupancyBitboards[2], sourceSquare);
+    set_bit(this->occupancyBitboards[2], targetSquare);
+
+    // Update zobrist hash for piece-square key
+    this->zobristHash ^= pieceSquareKeys[side][piece][sourceSquare];
+    this->zobristHash ^= pieceSquareKeys[side][piece][targetSquare];
+
+    // if move was capture, remove the opposing side's piece from bitboard
+    if(get_move_capture(move) && !get_move_enpassant(move)){
+        for(int i = 0; i < 6; i++){
+            if(get_bit(this->pieceBitboards[1-side][i], targetSquare)){
+                pop_bit(this->pieceBitboards[1-side][piece], targetSquare);
+                this->zobristHash ^= pieceSquareKeys[1-side][piece][targetSquare];
+                break;
+            }
+        }
+        pop_bit(this->occupancyBitboards[1-side], targetSquare);
+    }
+    // enpassant
+    else {
+        (side == white) ? pop_bit(this->pieceBitboards[black][pawn], targetSquare + 8) : pop_bit(this->pieceBitboards[white][pawn], targetSquare - 8);
+        zobristHash ^= pieceSquareKeys[1-side][pawn][side ? targetSquare + 8 : targetSquare - 8];
+    }
+
+    zobristHash ^= enpassantKeys[enpassantSquare % 8];
+    enpassantSquare = noSquare;
+
+    // if move was double pawn push, set enpassant square
+    if(piece == pawn && abs(sourceSquare-targetSquare) > 8){
+        (side == white) ? enpassantSquare = targetSquare + 8 : enpassantSquare = targetSquare - 8;
+        zobristHash ^= enpassantKeys[enpassantSquare % 8];
+    }
+
+    // Update side to move, and zobrist hash accordingly
+    this->sideToMove = 1-side;
+    this->zobristHash ^= sideToMoveKey;
+
+    // handle promotions
+    if(get_move_promoted(move)){
+        pop_bit(this->pieceBitboards[side][pawn], targetSquare);
+        set_bit(this->pieceBitboards[side][get_move_promotedType(move)], targetSquare);
+
+        this->zobristHash ^= pieceSquareKeys[side][pawn][targetSquare];
+        this->zobristHash ^= pieceSquareKeys[side][get_move_promotedType(move)][targetSquare];
+    }
+
+    // Handle castling
+    // in the board object variable. castling is 0bxxxx = qkQK
+    // in zobrist keys array it is {K, Q, k, q}
+    if(get_move_castling(move)){
+        switch(targetSquare){
+            case c8: pop_bit(pieceBitboards[side][rook], a8); set_bit(pieceBitboards[side][rook], d8); zobristHash ^= pieceSquareKeys[side][rook][a8];zobristHash ^= pieceSquareKeys[side][rook][d8];break;
+            case c1: pop_bit(pieceBitboards[side][rook], a1); set_bit(pieceBitboards[side][rook], d1); zobristHash ^= pieceSquareKeys[side][rook][a1];zobristHash ^= pieceSquareKeys[side][rook][d1];break;
+            case h8: pop_bit(pieceBitboards[side][rook], h8); set_bit(pieceBitboards[side][rook], f8); zobristHash ^= pieceSquareKeys[side][rook][h8];zobristHash ^= pieceSquareKeys[side][rook][f8];break;
+            case h1: pop_bit(pieceBitboards[side][rook], h1); set_bit(pieceBitboards[side][rook], f1); zobristHash ^= pieceSquareKeys[side][rook][h1];zobristHash ^= pieceSquareKeys[side][rook][f1];break;
+        }
+        zobristHash ^= castleRightKeys[side];
+        zobristHash ^= castleRightKeys[side+1];
+    }
+    if(piece == king){
+        castleRights &= side ? ~(12) : ~(3);
+    }
+    if(piece == rook && sourceSquare == a1) castleRights &= 0b1101; // White queenside rook
+    if(piece == rook && sourceSquare == h1) castleRights &= 0b1110; // White kingside rook
+    if(piece == rook && sourceSquare == a8) castleRights &= 0b0111; // Black queenside rook
+    if(piece == rook && sourceSquare == h8) castleRights &= 0b1011; // Black kingside rook
+
+    // if our king is in check after the move, it was illegal. restore position and return false.
+    if(isSquareAttacked(1-sideToMove, *this, getLSBIndex(this->pieceBitboards[1-sideToMove][king]))){
+        memcpy(this, &original, sizeof(Board));
+        return false;
+    }
+    // else return true
+    return true;
 }
