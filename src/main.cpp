@@ -16,6 +16,15 @@ int main()
 
     Board board = Board();
     board.initFromFen(startpos);
+    board.printBoard();
+    
+    for(int i = 0; i < 20; i++){
+        board.generateMoves();
+        printMove(board.moveList.moves[0]);
+        board.makeMove(board.moveList.moves[0]);
+        board.printBoard();
+    }
+
 
     cin.clear();
     cin.get();

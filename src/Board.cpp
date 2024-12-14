@@ -440,13 +440,13 @@ bool Board::makeMove(int move)
     int sourceSquare = get_move_source(move);
     int targetSquare = get_move_target(move);
     int piece = get_move_piece(move);
-    int side = get_move_colour(move);
+    int side = get_move_colour(move) > 0;
 
     // Make all the updates to board variables
     
     // Update piece bitboard
-    pop_bit(this->pieceBitboards[side][piece], sourceSquare);
-    set_bit(this->pieceBitboards[side][piece], targetSquare);
+    pop_bit(pieceBitboards[side][piece], sourceSquare);
+    set_bit(pieceBitboards[side][piece], targetSquare);
 
     // Update occupancy bitboard
     pop_bit(this->occupancyBitboards[side], sourceSquare);
@@ -476,7 +476,7 @@ bool Board::makeMove(int move)
     }
 
     zobristHash ^= enpassantKeys[enpassantSquare % 8];
-    enpassantSquare = noSquare;
+    enpassantSquare = -1;
 
     // if move was double pawn push, set enpassant square
     if(piece == pawn && abs(sourceSquare-targetSquare) > 8){
@@ -517,7 +517,6 @@ bool Board::makeMove(int move)
     if(piece == rook && sourceSquare == h1) castleRights &= 0b1110; // White kingside rook
     if(piece == rook && sourceSquare == a8) castleRights &= 0b0111; // Black queenside rook
     if(piece == rook && sourceSquare == h8) castleRights &= 0b1011; // Black kingside rook
-
     // if our king is in check after the move, it was illegal. restore position and return false.
     if(isSquareAttacked(1-side, *this, getLSBIndex(this->pieceBitboards[side][king]))){
         memcpy(this, &original, sizeof(Board));

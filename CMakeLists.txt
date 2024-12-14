@@ -25,3 +25,6 @@ include_directories(${SRC_DIR})
 
 # Set output directory for the final executable
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
+
+set(CMAKE_BUILD_TYPE Debug)
+
