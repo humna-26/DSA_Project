@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-inline int materialValue(Board board){
+inline pair<int, int> materialValue(Board board){
     int scores[] = {0, 0};
 
     for(int side = white; side <= black; side++){
@@ -18,7 +18,7 @@ inline int materialValue(Board board){
             }
         }
     }
-    return scores[0] - scores[1];
+    return {scores[0], scores[1]};
 }
 
 inline int positionalValue(Board board){
@@ -41,7 +41,19 @@ inline int positionalValue(Board board){
         while(board.pieceBitboards[side][knight]){
             int square =  getLSBIndex(board.pieceBitboards[side][knight]);
             pop_bit(board.pieceBitboards[side][knight], square);
-            scores[side] += knightPositionalValue[square];
+            scores[side] += knightPositionalValue[side?(63-square):square];
+        }
+        // Bishops
+        while(board.pieceBitboards[side][bishop]){
+            int square =  getLSBIndex(board.pieceBitboards[side][bishop]);
+            pop_bit(board.pieceBitboards[side][bishop], square);
+            scores[side] += knightPositionalValue[side?(63-square):square];
+        }
+        // Rooks
+        while(board.pieceBitboards[side][rook]){
+            int square =  getLSBIndex(board.pieceBitboards[side][rook]);
+            pop_bit(board.pieceBitboards[side][rook], square);
+            scores[side] += knightPositionalValue[side?(63-square):square];
         }
     }
 
@@ -254,10 +266,27 @@ inline int kingSafety(Board board){
     return whiteScore - blackScore;
 }
 
+inline int kingEndGame(Board board){
+    int scores[] ={0, 0};
+    
+    for(int side = white; side <= black; side++){
+        while(board.pieceBitboards[side][king]){
+            int square =  getLSBIndex(board.pieceBitboards[side][king]);
+            pop_bit(board.pieceBitboards[side][king], square);
+            scores[side] += kingEndGameValue[side?(63-square):square];
+        }
+    }
+
+    return scores[0] - scores[1];
+}
+
 int evaluatePosition(Board board){
     int eval = 0;
 
-    eval += materialValue(board);
+    pair<int, int> material = materialValue(board);
+    
+    eval += material.first;
+    eval -= material.second;
     eval += positionalValue(board);
     eval += pawnStructure(board);
     eval += passedIsolatedPawns(board);
@@ -265,5 +294,9 @@ int evaluatePosition(Board board){
     eval += bishopPair(board);
     eval += kingSafety(board);
 
-    return eval;
+    if(material.first + material.second <= 100000*2 + 550*2 + 320*2 + 400){
+        eval += kingEndGame(board);
+    }
+
+    return board.sideToMove == white ? eval : -eval;
 }

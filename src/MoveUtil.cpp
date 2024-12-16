@@ -6,6 +6,10 @@
 
 using namespace std;
 
+// Allocate space for move scoring arrays
+int killerMoves[2][128];
+int historyMoves[2][6][64];
+
 /*
 
     UTIL FUNCTIONS

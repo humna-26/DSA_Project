@@ -235,7 +235,7 @@ void Board::printBoard() const
         strcat(castling, "k");
     if (get_bit(castleRights, 3))
         strcat(castling, "q");
-    cout << "    Castling: " << castling << endl;
+    cout << "    Castling: " << (castleRights == 0 ? "none" : castling) << endl;
     cout << "    Enpassant: ";
     if (enpassantSquare == -1)
         cout << "none" << endl;

@@ -7,6 +7,18 @@
 
 using namespace std;
 
+// pv util variables
+int pvLength[128];
+int pvTable[128][128];
+int followPV;
+int scorePV;
+
+/*
+
+    FUNCTIONS
+
+*/
+
 void perft_test(Board *board, int depth, int *count)
 {
     // Base condition
@@ -64,34 +76,34 @@ void perft(Board *board, int depth){
 
 
         memcpy(board, &copy, sizeof(Board));
-        cout << i << ": " << printMove(board->moveList.moves[i]) << ": " << countn - countp << endl;
+        cout << printMove(board->moveList.moves[i]) << ": " << countn - countp << endl;
         countp = countn;
     }
 
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double, milli> duration = end - start;
 
-    cout << "Perft at depth " << depth << " : " << countn << endl;
+    cout << endl << "Perft at depth " << depth << " : " << countn << endl;
     cout << "Time taken: " << duration.count() << " ms; " << ((double)countn / duration.count()) / 1000 << " Mn/s" << endl;
 }
 
 // Negamax search with alpha-beta pruning
 // depth is in plies
-int negamax(Board board, int alpha, int beta, int depth, int ply, int *move){
+int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int *nodes){
+    // init pv length
+    pvLength[ply] = ply;
+
     // Base condition
     if(depth == 0){
-        return evaluatePosition(board);
+        // Start quiescense search at depth 0
+        return quiescenseSearch(board, alpha, beta, ply,nodes);
     }
 
-    board.generateMoves();
-
-    // 2nd Base condition, to end the search in case there are no more moves to play
-    if(board.moveList.count == 0){
-        // End of current branch
-        // Code here to check for stalemate or checkmate and return score accordingly
-        // Haven't decided yet if mates should be checked for in evaluation or outside of it
+    // drop search if depth goes beyond what pv arrs can handle
+    if(ply >= 128)
         return evaluatePosition(board);
-    }
+
+    (*nodes)++;
 
     // declare variable to store board copy in
     Board boardCopy;
@@ -99,37 +111,165 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move){
     int currAlpha = alpha;
     int bestMove;
 
+    // Variables for checkmate/stalemate detection
+    bool isChecked = isSquareAttacked(1-board.sideToMove, board, getLSBIndex(board.pieceBitboards[board.sideToMove][king]));
+    int legalMovesCount = 0;
+
+    // search extension for if king is in check
+    if(isChecked) depth++;
+
+    // null move pruning
+    // condition set to true for now. later make it so null move pruning is not done if we are in zugzwang
+    // or just simply let it be if feeling lazy and because zugzwangs are so rare
+    // beside zugzwang, might also miss some mate in x's that the opponent might have
+    if(true){
+        if(depth >= 3 && isChecked == 0 && ply > 0){
+            // save board
+            memcpy(&boardCopy, &board, sizeof(Board));
+
+            // switch side. basically give the opponents 2 moves to make. also reset enpassant bc 2 moves for same side
+            board.sideToMove = 1 - board.sideToMove;
+            board.enpassantSquare = -1;
+
+            // search with reduced depth
+            int score = -negamax(board, -beta, -beta + 1, depth - 3, ply + 1, move, nodes);
+
+            // restore board
+            memcpy(&board, &boardCopy, sizeof(Board));
+
+            // check for beta prune
+            if(score >= beta){
+                return beta;
+            }
+        }
+    }
+
+    // generate moves
+    board.generateMoves();
+    // sort moves according to score
+    sortMoves(board, ply);
+
+    // pv move ordering
+    if(followPV){
+        followPV = 0;
+        for(int i = 0; i < board.moveList.count; i++){
+            if(pvTable[0][ply] == board.moveList.moves[i]){
+                // Enable if current move is part of pv
+                scorePV = 1;
+                followPV = 1;
+            }
+        }
+    }
+
+    // variable to keep track of number of moves searched. (used in lmr)
+    int movesSearched = 0;
+
     // Loop over all moves
     for(int i = 0; i < board.moveList.count; i++){
 
         // Save current board config
         memcpy(&boardCopy, &board, sizeof(board));
 
-        // Code here to make the ith move
-        // Next line should be un-commented when makeMove is implemented
-        // board.makeMove(board.moveList.moves[i]);
+        // make the move, and check whether illegal
+        if (!board.makeMove(board.moveList.moves[i]))
+            continue;
 
-        // Increment and decrement ply to keep track of depth
-        // update current node's score with -negamax of child node
-        ply++;
-        int score = -negamax(board, -beta, -alpha, depth - 1, move);
-        ply--;
+        // Increment legal moves
+        legalMovesCount++;
+
+        // continue deeper with negamax, but with pv searching
+        // declare score
+        int score;
+
+        // search deeper. PVS + LMR applied
+        // normal full search at first
+        if(movesSearched == 0){
+            score = -negamax(board, -beta, -alpha, depth - 1, ply + 1, move, nodes);
+        }
+        // Apply LMR + PVS here
+        else {
+            // condition for reducing depth (LMR)
+            if(movesSearched >= fullDepthMoves && depth >= reductionLimit && isChecked == 0 && get_move_capture(board.moveList.moves[i]) == 0 && get_move_promoted(board.moveList.moves[i]) == 0){
+                // search with reduced depth
+                score = -negamax(board, -alpha - 1, -alpha, depth - 2, ply + 1, move, nodes);
+            }
+            else {
+                // ensure that full depth search is done
+                score = alpha + 1;
+            }
+
+            // PVS here
+            if(score > alpha){
+                // Assume current node to be the best in the whole tree at the current ply level
+                // pv moves are most likely to be the best one, if we close the range between alpha and beta on the score
+                // of the current pv move, it will prune alot more of the tree if it is actually the best move.
+                score = -negamax(board, -alpha - 1, -alpha, depth - 1, ply + 1, move, nodes);
+
+                // this will however, not work everytime. move from the last pv isn't necessarily the best move for the current search depth.
+                // in this case we will check if the score is outside  the bounds of alpha and beta, which means a move better than the last pv move was found.
+                // Then we simply have to run a normal search again, which makes the time spent on the last pv search wasted.
+                // but the time saved from doing this pv search is greater than the time wasted on it, so it makes our search faster overall in most cases.
+                if(score > alpha && score < beta)
+                    score = -negamax(board, -beta, -alpha, depth - 1, ply + 1, move, nodes);
+            }
+        }
 
         // Load back the current config
         memcpy(&board, &boardCopy, sizeof(board));
 
+        // increment number of moves searched
+        movesSearched++;
+
         // prune for beta fail
         if(score >= beta){
+            if(get_move_capture(board.moveList.moves[i]) > 0)
+                return beta;
+            // add killer
+            killerMoves[1][ply] = killerMoves[0][ply];
+            killerMoves[0][ply] = board.moveList.moves[i];
+
             return beta;
         }
 
         // Found a better move
         if(score > alpha){
+            // store history move
+            if(get_move_capture(board.moveList.moves[i]) == 0)
+                historyMoves[get_move_colour(board.moveList.moves[i]) > 0][get_move_piece(board.moveList.moves[i])][get_move_target(board.moveList.moves[i])] += depth;
+
+            // update alpha with the better one
             alpha = score;
 
+            // add to pv table
+            pvTable[ply][ply] = board.moveList.moves[i];
+
+            // copy from deeper pv into this one
+            for(int nply = ply + 1; nply < pvLength[ply+1]; nply++){
+                pvTable[ply][nply] = pvTable[ply+1][nply];
+            }
+
+            // adjust pv length
+            pvLength[ply] = pvLength[ply+1];
+
+            // if we are searching at root move, update the best move
             if(ply == 0){
                 bestMove = board.moveList.moves[i];
             }
+        }
+    }
+
+    // If no more moves to be made
+    if(legalMovesCount == 0){
+        // If king is checked, i.e checkmate
+        if(isChecked){
+            // return (almost) worst possible score + ply count
+            // ply count ensures it will go for the quickest mate
+            return -200000000 + ply;
+        }
+        // else for stalemate
+        else{
+            // return 0 because draw
+            return 0;
         }
     }
 
@@ -142,16 +282,111 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move){
     return alpha;
 }
 
+// negamax modified search to search into moves that are only captures. avoids the horizon effect which is caused by fixed search depth
+int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
+    int eval = evaluatePosition(board);
+
+    (*nodes)++;
+
+    // beta prune
+    if(eval >= beta){
+        return beta;
+    }
+
+    // found better move
+    if(eval > alpha){
+        alpha = eval;
+    }
+
+    board.generateMoves();
+    sortMoves(board, ply);
+    Board cpy;
+
+    // loop over all moves
+    for(int i = 0; i < board.moveList.count; i++){
+        // save board
+        memcpy(&cpy, &board, sizeof(Board));
+
+
+        // skip move if illegal and is not a capture
+        if (!get_move_capture(board.moveList.moves[i]) || !board.makeMove(board.moveList.moves[i])){
+            continue;
+        }
+
+        // search further if move is a capture
+        int score = -quiescenseSearch(board, -beta, -alpha, ply + 1,nodes);
+
+        // reset board
+        memcpy(&board, &cpy, sizeof(Board));
+
+        // beta prune
+        if(score >= beta)
+            return beta;
+        
+        // found better move
+        if(score > alpha)
+            alpha = score;
+    }
+
+    return alpha;
+}
+
 // General function to find best move, using various algorithms and techniques
-// Just negamax with depth 5 for now
-// Won't be using just negamax with fixed depth in future
-// Also the way this function is written is bad, as the eval (return value from negamax) is lost.
-// Maybe make this function std::pair<> in future
-int findBestMove(Board board){
+std::pair<int, int> findBestMove(Board board, int depth){
+    // To keep track of number of nodes visited. Helpful to see if move ordering improves pruning for alpha-beta
+    int nodes = 0;
     int move = 0;
+    int score = 0;
 
-    // depth hard coded to 5 for now. later will be controlled using iterative deepening
-    negamax(board, INT_MAX, INT_MIN, 5, &move);
+    // reset pv flags
+    followPV = 0;
+    scorePV = 0;
 
-    return move;
+    // Clear arrays
+    memset(killerMoves, 0, sizeof(killerMoves));
+    memset(historyMoves, 0, sizeof(historyMoves));
+    memset(pvTable, 0, sizeof(pvTable));
+    memset(pvLength, 0, sizeof(pvLength));
+
+    // initial values for alpha and beta
+    int alpha = -2000000000;
+    int beta = 2000000000;
+
+    // iterative deepening
+    for(int i = 1; i <= depth; i++){
+        // enable follow pv
+        followPV = 1;
+        
+        auto start = chrono::high_resolution_clock::now();
+
+        // find move
+        score = negamax(board, alpha, beta, i, 0, &move, &nodes);
+
+        // if score falls outside of the window, do a full search again at same depth
+        // time gained is more than wasted here (hopefully)
+
+        if(score <= alpha || score >= beta){
+            alpha = -2000000000;
+            beta = 2000000000;
+            i--;
+            continue;
+        }
+
+        alpha = score - aspirationWindow;
+        beta = score + aspirationWindow;
+        
+
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+        // print info
+        cout << "info score " << (board.sideToMove == white ? score : -score) << " depth " << i << " time " << duration.count() << " nodes " << nodes << " pv ";
+        for(int j = 0; j < pvLength[0]; j++)
+            cout << printMove(pvTable[0][j]) << " ";
+        cout << endl;
+    }
+
+    cout << "Bestmove " << printMove(move) << endl;
+
+    return {move, score};
 }
