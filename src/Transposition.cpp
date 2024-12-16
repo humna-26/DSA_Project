@@ -1,29 +1,62 @@
 #include "Transposition.h"
+#include <iostream>
+
+using namespace std;
 
 TTEntry::TTEntry(){
     zobristHash = 0;
-    evaluation = 0;
-    valid = false;
+    score = 0;
+    depth = 0;
+    flags = 0;
 }
 
-TTEntry::TTEntry(uint64_t z, int e){
+TTEntry::TTEntry(uint64_t z, int e, int d, int f){
     zobristHash = z;
-    evaluation = e;
-    valid = true;
+    score = e;
+    depth = d;
+    flags = f;
 }
 
-TranspositonTable::TranspositonTable(int s){
-    tableSize = s;
-    table = new TTEntry[s];
+TranspositonTable::TranspositonTable(){
+    tableSize = (ttSizeMB * 1024 * 1024) / sizeof(TTEntry);
+    table = new TTEntry[tableSize];
 }
 
-void TranspositonTable::store(TTEntry entry){
-    table[entry.zobristHash % tableSize] = entry;
+void TranspositonTable::store(int score, int depth, uint64_t hash, int flag){
+    TTEntry *entry = &(table[hash % tableSize]);
+
+    entry->score = score;
+    entry->depth = depth;
+    entry->flags = flag;
+    entry->zobristHash = hash;
 }
 
-TTEntry* TranspositonTable::search(uint64_t hash){
-    int index = hash % tableSize;
-    if(table[index].zobristHash == hash && table[index].valid)
-        return &(table[index]);
-    return nullptr;
+int TranspositonTable::search(uint64_t hash, int alpha, int beta, int depth){
+    TTEntry *entry = &table[hash % tableSize];
+
+    if((entry->zobristHash == hash) && (entry->depth >= depth)){
+        if(entry->flags == entryExact){
+            return entry->score;
+        }
+        if((entry->flags == entryAlpha) && (entry->score <= alpha)){
+            return alpha;
+        }
+        if((entry->flags == entryBeta) && (entry->score >= beta)){
+            return beta;
+        }
+    }
+
+    // if nothing found, return a value that will be outside the possible eval range
+    return 2100000000;
 }
+
+void TranspositonTable::clear(){
+    for(int i = 0; i < tableSize; i++){
+        table[i].zobristHash = 0;
+        table[i].flags = 0;
+        table[i].depth = 0;
+        table[i].score = 0;
+    }
+}
+
+TranspositonTable tt;

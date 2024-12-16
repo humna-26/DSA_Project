@@ -21,11 +21,8 @@ add_executable(ChessProject
     ${SRC_DIR}/MoveList.cpp
     ${SRC_DIR}/Evaluation.cpp
     ${SRC_DIR}/uci.cpp
-<<<<<<< HEAD
     ${SRC_DIR}/SearchUtil.cpp
-=======
     ${SRC_DIR}/Transposition.cpp
->>>>>>> transposition
 )
 
 # Include header files from the src directory

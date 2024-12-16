@@ -90,6 +90,16 @@ void perft(Board *board, int depth){
 // Negamax search with alpha-beta pruning
 // depth is in plies
 int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int *nodes){
+    // declare score
+    int score;
+
+    // default init to alpha flag
+    int entryFlag = entryAlpha;
+
+    // check if move is stored, and return if yes
+    if((score = tt.search(board.zobristHash, alpha, beta, depth)) != 2100000000)
+        return score;
+
     // init pv length
     pvLength[ply] = ply;
 
@@ -128,11 +138,14 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             memcpy(&boardCopy, &board, sizeof(Board));
 
             // switch side. basically give the opponents 2 moves to make. also reset enpassant bc 2 moves for same side
+            // also update zobrist hash
             board.sideToMove = 1 - board.sideToMove;
+            board.zobristHash ^= sideToMoveKey;
+            if(board.enpassantSquare != -1) board.zobristHash ^= enpassantKeys[board.enpassantSquare % 8];
             board.enpassantSquare = -1;
 
             // search with reduced depth
-            int score = -negamax(board, -beta, -beta + 1, depth - 3, ply + 1, move, nodes);
+            score = -negamax(board, -beta, -beta + 1, depth - 3, ply + 1, move, nodes);
 
             // restore board
             memcpy(&board, &boardCopy, sizeof(Board));
@@ -177,10 +190,6 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
         // Increment legal moves
         legalMovesCount++;
 
-        // continue deeper with negamax, but with pv searching
-        // declare score
-        int score;
-
         // search deeper. PVS + LMR applied
         // normal full search at first
         if(movesSearched == 0){
@@ -222,6 +231,10 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 
         // prune for beta fail
         if(score >= beta){
+
+            // store tt entry as beta
+            tt.store(beta, depth, board.zobristHash, entryBeta);
+
             if(get_move_capture(board.moveList.moves[i]) > 0)
                 return beta;
             // add killer
@@ -233,6 +246,10 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 
         // Found a better move
         if(score > alpha){
+            
+            // update entry flag to pv
+            entryFlag = entryExact;
+
             // store history move
             if(get_move_capture(board.moveList.moves[i]) == 0)
                 historyMoves[get_move_colour(board.moveList.moves[i]) > 0][get_move_piece(board.moveList.moves[i])][get_move_target(board.moveList.moves[i])] += depth;
@@ -277,6 +294,9 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
     if(currAlpha != alpha){
         *move = bestMove;
     }
+
+    // write entry with alpha
+    tt.store(alpha, depth, board.zobristHash, entryFlag);
 
     // return the eval of the best move that is reachable
     return alpha;

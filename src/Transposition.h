@@ -2,15 +2,21 @@
 #define TRANSPOSITION_H
 
 #include <cstdint>
+#include <cstring>
+
+enum {
+    entryExact, entryAlpha, entryBeta
+};
+
+constexpr int ttSizeMB = 64;
 
 class TTEntry{
     public:
         uint64_t zobristHash;
-        int evaluation;
-        bool valid;
+        int score, depth, flags;
 
         TTEntry();
-        TTEntry(uint64_t z, int e);
+        TTEntry(uint64_t z, int s, int d, int f);
 };
 
 class TranspositonTable{
@@ -18,10 +24,15 @@ class TranspositonTable{
         int tableSize;
         TTEntry *table;
 
-        TranspositonTable(int s);
+        TranspositonTable();
 
-        void store(TTEntry entry);
-        TTEntry *search(uint64_t hash);
+        void store(int score, int depth, uint64_t hash, int flag);
+        int search(uint64_t hash, int alpha, int beta, int depth);
+        void clear();
 };
+
+extern TranspositonTable tt;
+
+void initTT();
 
 #endif

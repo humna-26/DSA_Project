@@ -3,6 +3,7 @@
 
 #include "Board.h"
 #include "Evaluation.h"
+#include "Transposition.h"
 #include <utility>
 
 void genMoves(Board *board);
