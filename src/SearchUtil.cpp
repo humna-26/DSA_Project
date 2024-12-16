@@ -97,7 +97,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
     int entryFlag = entryAlpha;
 
     // check if move is stored, and return if yes
-    if((score = tt.search(board.zobristHash, alpha, beta, depth)) != 2100000000)
+    if((ply > 0) && (score = tt.search(board.zobristHash, alpha, beta, depth)) != 2100000000)
         return score;
 
     // init pv length
@@ -144,7 +144,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             if(board.enpassantSquare != -1) board.zobristHash ^= enpassantKeys[board.enpassantSquare % 8];
             board.enpassantSquare = -1;
 
-            // search with reduced depth
+            // search with reduced depth and smaller alpha-beta window
             score = -negamax(board, -beta, -beta + 1, depth - 3, ply + 1, move, nodes);
 
             // restore board
@@ -229,21 +229,6 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
         // increment number of moves searched
         movesSearched++;
 
-        // prune for beta fail
-        if(score >= beta){
-
-            // store tt entry as beta
-            tt.store(beta, depth, board.zobristHash, entryBeta);
-
-            if(get_move_capture(board.moveList.moves[i]) > 0)
-                return beta;
-            // add killer
-            killerMoves[1][ply] = killerMoves[0][ply];
-            killerMoves[0][ply] = board.moveList.moves[i];
-
-            return beta;
-        }
-
         // Found a better move
         if(score > alpha){
             
@@ -271,6 +256,21 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             // if we are searching at root move, update the best move
             if(ply == 0){
                 bestMove = board.moveList.moves[i];
+            }
+
+            // prune for beta fail
+            if(score >= beta){
+
+                // store tt entry as beta
+                tt.store(beta, depth, board.zobristHash, entryBeta);
+
+                if(get_move_capture(board.moveList.moves[i]) > 0)
+                    return beta;
+                // add killer
+                killerMoves[1][ply] = killerMoves[0][ply];
+                killerMoves[0][ply] = board.moveList.moves[i];
+
+                return beta;
             }
         }
     }
@@ -306,6 +306,10 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
     int eval = evaluatePosition(board);
 
+    // Too deep for the pv table to handle, just return eval
+    if(ply >= 128)
+        return eval;
+
     (*nodes)++;
 
     // beta prune
@@ -339,13 +343,16 @@ int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
         // reset board
         memcpy(&board, &cpy, sizeof(Board));
 
-        // beta prune
-        if(score >= beta)
-            return beta;
+        
         
         // found better move
-        if(score > alpha)
+        if(score > alpha){
             alpha = score;
+
+            // beta prune
+            if(score >= beta)
+                return beta;
+        }
     }
 
     return alpha;

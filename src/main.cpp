@@ -9,7 +9,7 @@
 using namespace std;
 
 static char startpos[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-static int defaultSearchDepth = 8;
+static int defaultSearchDepth = 10;
 
 void play();
 void playSelf();
@@ -18,11 +18,7 @@ void initAll();
 int main() {
     initAll();
 
-    Board b = Board();
-    b.initFromFen(startpos);
-    b.printBoard();
-
-    findBestMove(b, 10);
+    playSelf();
 
     cin.ignore();
     cin.get();
@@ -102,7 +98,7 @@ void play(){
 
 void playSelf(){
     Board board = Board();
-    char fen[] = "8/8/8/8/3k4/8/8/3KR3 w - - 0 1";
+    char fen[] = "8/8/8/8/4k3/8/8/2RK4 w - - 0 1";
     board.initFromFen(fen);
 
     while(true){
@@ -117,6 +113,9 @@ void playSelf(){
             }
             break;
         }
+
+        cin.ignore();
+        cin.get();
 
         pair<int, int> move = findBestMove(board, defaultSearchDepth);
         board.makeMove(move.first);
