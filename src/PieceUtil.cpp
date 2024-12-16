@@ -1,6 +1,8 @@
 #include<iostream>
 #include<cstdint>
 #include"PieceUtil.h"
+#include<random>
+#include<set>
 using namespace std;
 
 /*
@@ -304,7 +306,75 @@ uint64_t castleRightKeys[4];
 uint64_t enpassantKeys[8];
 uint64_t sideToMoveKey;
 
+bool keyCollision(){
+    std::set<uint64_t> keys;
+
+    // Check piece keys
+    for(int colour = 0; colour <= 1; colour++)
+        for (int piece = 0; piece < 6; piece++) {
+            for (int square = 0; square < 64; square++) {
+                if (!keys.insert(pieceSquareKeys[colour][piece][square]).second) {
+                    return true; // Collision found
+                }
+            }
+        }
+
+    // Check en passant keys
+    for (int square = 0; square < 8; square++) {
+        if (!keys.insert(enpassantKeys[square]).second) {
+            return true; // Collision found
+        }
+    }
+
+    // Check castling keys
+    for (int index = 0; index < 4; index++) {
+        if (!keys.insert(castleRightKeys[index]).second) {
+            return true; // Collision found
+        }
+    }
+
+    // Check side key
+    if (!keys.insert(sideToMoveKey).second) {
+        return true; // Collision found
+    }
+
+    return false; // No collisions
+}
+
+std::mt19937_64 rng(1804289383); // Seeded for reproducibility
+
+// Generate a random 64-bit number
+uint64_t genU64() {
+    return rng();
+}
+
+
+void genKeys() {
+    for(int colour = 0; colour <= 1; colour++)
+        for (int piece = 0; piece < 6; piece++) {
+            // Loop over board squares (64)
+            for (int square = 0; square < 64; square++) {
+                pieceSquareKeys[colour][piece][square] = genU64();
+            }
+        }
+
+    // En passant keys
+    for (int square = 0; square < 8; square++) {
+        enpassantKeys[square] = genU64();
+    }
+
+    // Castling keys
+    for (int index = 0; index < 4; index++) {
+        castleRightKeys[index] = genU64();
+    }
+
+    // Side key
+    sideToMoveKey = genU64();
+}
+
 // Wania
 void initZobristKeys(){
-
+    while(keyCollision()){
+        genKeys();
+    }
 }

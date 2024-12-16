@@ -16,9 +16,9 @@ void playSelf();
 
 int main() {
     initAttackMaps();
+    initZobristKeys();
 
     play();
-
 
     cin.ignore();
     cin.get();
@@ -49,7 +49,6 @@ void play(){
 
     while(true){
         board.printBoard();
-
 
         if(legalMoveCount(board) == 0){
             if(isSquareAttacked(1-board.sideToMove, board, getLSBIndex(board.pieceBitboards[board.sideToMove][king]))){

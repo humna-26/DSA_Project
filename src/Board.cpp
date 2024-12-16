@@ -105,6 +105,7 @@ void Board::initFromFen(char *FEN)
                 continue;
             }
             set_bit(pieceBitboards[color][piece], square);
+            zobristHash ^= pieceSquareKeys[color][piece][square];
             square++;
         }
         currentChar++;
@@ -114,6 +115,7 @@ void Board::initFromFen(char *FEN)
 
     // 2. Parse side to move
     sideToMove = (*currentChar == 'w') ? white : black;
+    if(sideToMove == black) zobristHash ^= sideToMoveKey;
     currentChar += 2; // Skip to castling rights
 
     // 3. Parse castling rights
@@ -130,15 +132,19 @@ void Board::initFromFen(char *FEN)
             {
             case 'K':
                 castleRights |= 1;
+                zobristHash ^= castleRightKeys[0];
                 break; // White kingside
             case 'Q':
                 castleRights |= 2;
+                zobristHash ^= castleRightKeys[1];
                 break; // White queenside
             case 'k':
                 castleRights |= 4;
+                zobristHash ^= castleRightKeys[2];
                 break; // Black kingside
             case 'q':
                 castleRights |= 8;
+                zobristHash ^= castleRightKeys[3];
                 break; // Black queenside
             }
             currentChar++;
@@ -158,6 +164,7 @@ void Board::initFromFen(char *FEN)
         int rank = 8 - (currentChar[1] - '0');
         enpassantSquare = rank * 8 + file;
         currentChar += 3;
+        zobristHash ^= enpassantKeys[file];
     }
 
     // 5. Parse halfmove clock
@@ -242,7 +249,8 @@ void Board::printBoard() const
     else
         cout << (char)(97 + (enpassantSquare % 8)) << 8 - enpassantSquare / 8 << endl;
     cout << "    Full-moves: " << halfMoveClocks[0] << endl;
-    cout << "    Half-moves: " << halfMoveClocks[1] << endl
+    cout << "    Half-moves: " << halfMoveClocks[1] << endl;
+    cout << "    Zobrsist Hash: " << zobristHash << endl
          << endl;
 }
 
@@ -479,10 +487,28 @@ bool Board::makeMove(int move)
         pop_bit(this->occupancyBitboards[1-side], targetSquare);
 
         // handle castling rights if rook is taken
-        if(targetSquare == a1) castleRights &= 0b1101; // White queenside rook
-        if(targetSquare == h1) castleRights &= 0b1110; // White kingside rook
-        if(targetSquare == a8) castleRights &= 0b0111; // Black queenside rook
-        if(targetSquare == h8) castleRights &= 0b1011; // Black kingside rook
+
+        // zobrist hash
+        if(targetSquare == a1 && (castleRights & 0b0010) > 0){
+            // white queenside
+            castleRights &= 0b1101;
+            zobristHash ^= castleRightKeys[1];
+        }
+        if(targetSquare == h1 && (castleRights & 0b0001) > 0){
+            // white kingside
+            castleRights &= 0b1110;
+            zobristHash ^= castleRightKeys[0];
+        }
+        if(targetSquare == a8 && (castleRights & 0b1000) > 0){
+            // black queenside
+            castleRights &= 0b0111;
+            zobristHash ^= castleRightKeys[3];
+        }
+        if(targetSquare == h8 && (castleRights & 0b0100) > 0){
+            // black kingside
+            castleRights &= 0b1011;
+            zobristHash ^= castleRightKeys[2];
+        }
     }
     // enpassant
     else if (get_move_enpassant(move)){
@@ -495,10 +521,10 @@ bool Board::makeMove(int move)
             pop_bit(occupancyBitboards[1-side], targetSquare - 8);
             pop_bit(occupancyBitboards[2], targetSquare - 8);
         }
-        zobristHash ^= pieceSquareKeys[1-side][pawn][side ? targetSquare + 8 : targetSquare - 8];
+        zobristHash ^= pieceSquareKeys[1-side][pawn][(side ? targetSquare + 8 : targetSquare - 8)];
     }
 
-    zobristHash ^= enpassantKeys[enpassantSquare % 8];
+    if(enpassantSquare != -1) zobristHash ^= enpassantKeys[enpassantSquare % 8];
     enpassantSquare = -1;
 
     // if move was double pawn push, set enpassant square
@@ -506,6 +532,11 @@ bool Board::makeMove(int move)
         (side == white) ? enpassantSquare = targetSquare + 8 : enpassantSquare = targetSquare - 8;
         zobristHash ^= enpassantKeys[enpassantSquare % 8];
     }
+
+    // update full move if move was by black
+    if(sideToMove == black) halfMoveClocks[0]++;
+    // reset hald move clock accordingly
+    if(piece == pawn || (get_move_capture(move) > 0)) halfMoveClocks[1] == 0;
 
     // Update side to move, and zobrist hash accordingly
     this->sideToMove = 1-side;
@@ -550,18 +581,36 @@ bool Board::makeMove(int move)
                 zobristHash ^= pieceSquareKeys[side][rook][h1]; zobristHash ^= pieceSquareKeys[side][rook][f1];
                 break;
         }
-        zobristHash ^= castleRightKeys[side];
-        zobristHash ^= castleRightKeys[side+1];
+        
     }
     // if king is moved, remove that side's castling rights entirely
     if(piece == king){
+        if((castleRights & 0b0010) > 0) zobristHash ^= castleRightKeys[1]; if((castleRights & 0b0001) > 0) zobristHash ^= castleRightKeys[0];
+        if((castleRights & 0b0100) > 0) zobristHash ^= castleRightKeys[2]; if((castleRights & 0b1000) > 0) zobristHash ^= castleRightKeys[3];
         castleRights &= ((side==black) ? 0b0011 : 0b1100);
     }
 
-    if(piece == rook && sourceSquare == a1) castleRights &= 0b1101; // White queenside rook
-    if(piece == rook && sourceSquare == h1) castleRights &= 0b1110; // White kingside rook
-    if(piece == rook && sourceSquare == a8) castleRights &= 0b0111; // Black queenside rook
-    if(piece == rook && sourceSquare == h8) castleRights &= 0b1011; // Black kingside rook
+    if(piece == rook && sourceSquare == a1 && (castleRights & 0b0010) > 0){
+        // white queenside
+        castleRights &= 0b1101;
+        zobristHash ^= castleRightKeys[1];
+    }
+    if(piece == rook && sourceSquare == h1 && (castleRights & 0b0001) > 0){
+        // white kingside
+        castleRights &= 0b1110;
+        zobristHash ^= castleRightKeys[0];
+    }
+    if(piece == rook && sourceSquare == a8 && (castleRights & 0b1000) > 0){
+        // black queenside
+        castleRights &= 0b0111;
+        zobristHash ^= castleRightKeys[3];
+    }
+    if(piece == rook && sourceSquare == h8 && (castleRights & 0b0100) > 0){
+        // black kingside
+        castleRights &= 0b1011;
+        zobristHash ^= castleRightKeys[2];
+    }
+
     // if our king is in check after the move, it was illegal. restore position and return false.
     if(isSquareAttacked(1-side, *this, getLSBIndex(this->pieceBitboards[side][king]))){
         memcpy(this, &original, sizeof(Board));
