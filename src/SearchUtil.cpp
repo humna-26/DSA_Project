@@ -13,6 +13,10 @@ int pvTable[128][128];
 int followPV;
 int scorePV;
 
+// 3-fold rep
+uint64_t gameHistoryTable[17700];
+int repetitionIndex;
+
 /*
 
     FUNCTIONS
@@ -96,12 +100,16 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
     // default init to alpha flag
     int entryFlag = entryAlpha;
 
-    // check if move is stored, and return if yes
-    if((ply > 0) && (score = tt.search(board.zobristHash, alpha, beta, depth)) != 2100000000)
-        return score;
+    // check for rep
+    if(ply > 0 && repetitionDetection(board.zobristHash))
+        return 0;
 
     // init pv length
     pvLength[ply] = ply;
+
+    // check if move is stored, and return if yes
+    if((ply > 0) && !((score = tt.search(board.zobristHash, alpha, beta, depth, ply)) > mateScore) && !((beta - alpha) > 0))
+        return score;
 
     // Base condition
     if(depth == 0){
@@ -144,8 +152,15 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             if(board.enpassantSquare != -1) board.zobristHash ^= enpassantKeys[board.enpassantSquare % 8];
             board.enpassantSquare = -1;
 
+            // increment repetition index and store zobrist hash
+            repetitionIndex++;
+            gameHistoryTable[repetitionIndex] = board.zobristHash;
+
             // search with reduced depth and smaller alpha-beta window
             score = -negamax(board, -beta, -beta + 1, depth - 3, ply + 1, move, nodes);
+
+            // decrement repetition index
+            repetitionIndex--;
 
             // restore board
             memcpy(&board, &boardCopy, sizeof(Board));
@@ -193,14 +208,26 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
         // search deeper. PVS + LMR applied
         // normal full search at first
         if(movesSearched == 0){
+            // increment repetition index and store zobrist hash
+            repetitionIndex++;
+            gameHistoryTable[repetitionIndex] = board.zobristHash;
+
             score = -negamax(board, -beta, -alpha, depth - 1, ply + 1, move, nodes);
+
+            repetitionIndex--;
         }
         // Apply LMR + PVS here
         else {
             // condition for reducing depth (LMR)
             if(movesSearched >= fullDepthMoves && depth >= reductionLimit && isChecked == 0 && get_move_capture(board.moveList.moves[i]) == 0 && get_move_promoted(board.moveList.moves[i]) == 0){
+                // increment repetition index and store zobrist hash
+                repetitionIndex++;
+                gameHistoryTable[repetitionIndex] = board.zobristHash;
+
                 // search with reduced depth
                 score = -negamax(board, -alpha - 1, -alpha, depth - 2, ply + 1, move, nodes);
+
+                repetitionIndex--;
             }
             else {
                 // ensure that full depth search is done
@@ -209,17 +236,30 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 
             // PVS here
             if(score > alpha){
+                // increment repetition index and store zobrist hash
+                repetitionIndex++;
+                gameHistoryTable[repetitionIndex] = board.zobristHash;
+
                 // Assume current node to be the best in the whole tree at the current ply level
                 // pv moves are most likely to be the best one, if we close the range between alpha and beta on the score
                 // of the current pv move, it will prune alot more of the tree if it is actually the best move.
                 score = -negamax(board, -alpha - 1, -alpha, depth - 1, ply + 1, move, nodes);
 
+                repetitionIndex--;
+
                 // this will however, not work everytime. move from the last pv isn't necessarily the best move for the current search depth.
                 // in this case we will check if the score is outside  the bounds of alpha and beta, which means a move better than the last pv move was found.
                 // Then we simply have to run a normal search again, which makes the time spent on the last pv search wasted.
                 // but the time saved from doing this pv search is greater than the time wasted on it, so it makes our search faster overall in most cases.
-                if(score > alpha && score < beta)
+                if(score > alpha && score < beta){
+                    // increment repetition index and store zobrist hash
+                    repetitionIndex++;
+                    gameHistoryTable[repetitionIndex] = board.zobristHash;
+
                     score = -negamax(board, -beta, -alpha, depth - 1, ply + 1, move, nodes);
+
+                    repetitionIndex--;
+                }
             }
         }
 
@@ -262,7 +302,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             if(score >= beta){
 
                 // store tt entry as beta
-                tt.store(beta, depth, board.zobristHash, entryBeta);
+                tt.store(beta, depth, board.zobristHash, entryBeta, ply);
 
                 if(get_move_capture(board.moveList.moves[i]) > 0)
                     return beta;
@@ -281,7 +321,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
         if(isChecked){
             // return (almost) worst possible score + ply count
             // ply count ensures it will go for the quickest mate
-            return -200000000 + ply;
+            return -mateScore + ply;
         }
         // else for stalemate
         else{
@@ -296,7 +336,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
     }
 
     // write entry with alpha
-    tt.store(alpha, depth, board.zobristHash, entryFlag);
+    tt.store(alpha, depth, board.zobristHash, entryFlag, ply);
 
     // return the eval of the best move that is reachable
     return alpha;
@@ -337,13 +377,17 @@ int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
             continue;
         }
 
+        // increment repetition index and store zobrist hash
+        repetitionIndex++;
+        gameHistoryTable[repetitionIndex] = board.zobristHash;
+
         // search further if move is a capture
         int score = -quiescenseSearch(board, -beta, -alpha, ply + 1,nodes);
 
+        repetitionIndex--;
+
         // reset board
         memcpy(&board, &cpy, sizeof(Board));
-
-        
         
         // found better move
         if(score > alpha){
@@ -376,8 +420,8 @@ std::pair<int, int> findBestMove(Board board, int depth){
     memset(pvLength, 0, sizeof(pvLength));
 
     // initial values for alpha and beta
-    int alpha = -2000000000;
-    int beta = 2000000000;
+    int alpha = -infinity;
+    int beta = infinity;
 
     // iterative deepening
     for(int i = 1; i <= depth; i++){
@@ -393,8 +437,8 @@ std::pair<int, int> findBestMove(Board board, int depth){
         // time gained is more than wasted here (hopefully)
 
         if(score <= alpha || score >= beta){
-            alpha = -2000000000;
-            beta = 2000000000;
+            alpha = -infinity;
+            beta = infinity;
             i--;
             continue;
         }

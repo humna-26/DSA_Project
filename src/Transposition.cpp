@@ -1,4 +1,5 @@
 #include "Transposition.h"
+#include "SearchUtil.h"
 #include <iostream>
 
 using namespace std;
@@ -22,8 +23,12 @@ TranspositonTable::TranspositonTable(){
     table = new TTEntry[tableSize];
 }
 
-void TranspositonTable::store(int score, int depth, uint64_t hash, int flag){
+void TranspositonTable::store(int score, int depth, uint64_t hash, int flag, int ply){
     TTEntry *entry = &(table[hash % tableSize]);
+
+    // adjust for mating scores
+    if(score > mateLower) score += ply;
+    if(score < -mateLower) score -= ply;
 
     entry->score = score;
     entry->depth = depth;
@@ -31,17 +36,23 @@ void TranspositonTable::store(int score, int depth, uint64_t hash, int flag){
     entry->zobristHash = hash;
 }
 
-int TranspositonTable::search(uint64_t hash, int alpha, int beta, int depth){
+int TranspositonTable::search(uint64_t hash, int alpha, int beta, int depth, int ply){
     TTEntry *entry = &table[hash % tableSize];
+
+    int score = entry->score;
+
+    // adjust for mating scores
+    if(score < mateLower) score += ply;
+    if(score > -mateLower) score -= ply;
 
     if((entry->zobristHash == hash) && (entry->depth >= depth)){
         if(entry->flags == entryExact){
-            return entry->score;
+            return score;
         }
-        if((entry->flags == entryAlpha) && (entry->score <= alpha)){
+        if((entry->flags == entryAlpha) && (score <= alpha)){
             return alpha;
         }
-        if((entry->flags == entryBeta) && (entry->score >= beta)){
+        if((entry->flags == entryBeta) && (score >= beta)){
             return beta;
         }
     }

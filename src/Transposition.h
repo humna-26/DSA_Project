@@ -26,13 +26,11 @@ class TranspositonTable{
 
         TranspositonTable();
 
-        void store(int score, int depth, uint64_t hash, int flag);
-        int search(uint64_t hash, int alpha, int beta, int depth);
+        void store(int score, int depth, uint64_t hash, int flag, int ply);
+        int search(uint64_t hash, int alpha, int beta, int depth, int ply);
         void clear();
 };
 
 extern TranspositonTable tt;
-
-void initTT();
 
 #endif

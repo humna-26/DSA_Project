@@ -10,7 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
 # Optimization flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -funroll-loops -flto -fomit-frame-pointer -ffast-math")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -funroll-loops -flto -fomit-frame-pointer -ffast-math -ftree-vectorize -fopenmp -fstrict-aliasing -D_FORTIFY_SOURCE=2 -fno-exceptions -std=c++17")
+
 
 # Add the executable target from the .cpp files in src directory
 add_executable(ChessProject

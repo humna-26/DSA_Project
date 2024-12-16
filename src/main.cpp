@@ -1,24 +1,35 @@
 #include <iostream>
 #include <cstdint>
+#include "SearchUtil.h"
 #include "PieceUtil.h"
 #include "Board.h"
-#include "SearchUtil.h"
 #include "MoveUtil.h"
 #include "Evaluation.h"
 #include "Transposition.h"
 using namespace std;
 
 static char startpos[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-static int defaultSearchDepth = 10;
+static char rep[] = "r1b1k1nr/pppp1ppp/1bn2q2/8/4P3/1NN3P1/PPP2P1P/R1BQKB1R w KQkq - 0 1";
+static int defaultSearchDepth = 8;
 
 void play();
 void playSelf();
 void initAll();
 
+// REMINDER TO ADD REPETITION INDEX INCREMENTS IN UCI INPUT
+// WHEN TAKING IN MOVES TO SET UP A POSITION
+
+// e.g position startpos moves e2e4 e7e5 ....
+// these moves need to be added to the game history table
+
 int main() {
     initAll();
 
-    playSelf();
+    Board b = Board();
+    b.initFromFen(rep);
+
+    findBestMove(b, defaultSearchDepth);
+    findBestMove(b, defaultSearchDepth);
 
     cin.ignore();
     cin.get();
@@ -29,6 +40,7 @@ void initAll(){
     initAttackMaps();
     initZobristKeys();
     tt.clear();
+    repetitionIndex = 0;
 }
 
 int legalMoveCount(Board board){
