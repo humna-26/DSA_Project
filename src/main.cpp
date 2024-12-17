@@ -6,6 +6,9 @@
 #include "MoveUtil.h"
 #include "Evaluation.h"
 #include "Transposition.h"
+#include "uci.h"
+#include "UCIConstants.h"
+#include "TimeManager.h"
 using namespace std;
 
 static char startpos[] = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -25,14 +28,17 @@ void initAll();
 int main() {
     initAll();
 
-    Board b = Board();
-    b.initFromFen(rep);
+    //Board b = Board();
+    //b.initFromFen(rep);
 
-    findBestMove(b, defaultSearchDepth);
-    findBestMove(b, defaultSearchDepth);
+    //findBestMove(b, defaultSearchDepth);
+    //findBestMove(b, defaultSearchDepth);
 
-    cin.ignore();
-    cin.get();
+    //cin.ignore();
+    //cin.get();
+    // Create and start UCI loop
+    UCIProtocol uci;
+    uci.loop();
     return 0;
 }
 

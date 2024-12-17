@@ -4,9 +4,14 @@
 #include "Board.h"
 #include "Evaluation.h"
 #include "Transposition.h"
+#include "UCIConstants.h"
+#include "TimeManager.h"
 #include <utility>
 
 using namespace std;
+
+extern bool stopSearch;
+void resetSearch();
 
 void genMoves(Board *board);
 

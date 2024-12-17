@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -22,6 +23,19 @@ int repetitionIndex;
     FUNCTIONS
 
 */
+
+bool stopSearch = false;
+
+void resetSearch() {
+    stopSearch = false;
+    // Reset other search-related variables as needed
+    followPV = 0;
+    scorePV = 0;
+    memset(killerMoves, 0, sizeof(killerMoves));
+    memset(historyMoves, 0, sizeof(historyMoves));
+    memset(pvTable, 0, sizeof(pvTable));
+    memset(pvLength, 0, sizeof(pvLength));
+}
 
 void perft_test(Board *board, int depth, int *count)
 {
@@ -94,6 +108,13 @@ void perft(Board *board, int depth){
 // Negamax search with alpha-beta pruning
 // depth is in plies
 int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int *nodes){
+    // Add time check at the start of the function
+    if (((*nodes) & 2047) == 0) {  // Check every 2048 nodes
+        if (timeManager.shouldStop()) {
+            stopSearch = true;
+        }
+    }
+    if (stopSearch) return 0;
     // declare score
     int score;
 
@@ -402,62 +423,59 @@ int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
     return alpha;
 }
 
-// General function to find best move, using various algorithms and techniques
-std::pair<int, int> findBestMove(Board board, int depth){
-    // To keep track of number of nodes visited. Helpful to see if move ordering improves pruning for alpha-beta
+// findBestMove now uses time management
+std::pair<int, int> findBestMove(Board board, int depth) {
+    resetSearch();
+    timeManager.start();
+    
     int nodes = 0;
     int move = 0;
     int score = 0;
+    int bestMove = 0;
+    int bestScore = -infinity;
 
-    // reset pv flags
-    followPV = 0;
-    scorePV = 0;
-
-    // Clear arrays
-    memset(killerMoves, 0, sizeof(killerMoves));
-    memset(historyMoves, 0, sizeof(historyMoves));
-    memset(pvTable, 0, sizeof(pvTable));
-    memset(pvLength, 0, sizeof(pvLength));
-
-    // initial values for alpha and beta
-    int alpha = -infinity;
-    int beta = infinity;
-
-    // iterative deepening
-    for(int i = 1; i <= depth; i++){
-        // enable follow pv
+    // Iterative deepening
+    for(int currentDepth = 1; currentDepth <= depth; currentDepth++) {
         followPV = 1;
         
-        auto start = chrono::high_resolution_clock::now();
-
-        // find move
-        score = negamax(board, alpha, beta, i, 0, &move, &nodes);
-
-        // if score falls outside of the window, do a full search again at same depth
-        // time gained is more than wasted here (hopefully)
-
-        if(score <= alpha || score >= beta){
-            alpha = -infinity;
-            beta = infinity;
-            i--;
-            continue;
+        score = negamax(board, -infinity, infinity, currentDepth, 0, &move, &nodes);
+        
+        if (stopSearch && currentDepth == 1) {
+            return {move, score};
+        }
+        else if (stopSearch) {
+            return {bestMove, bestScore};
         }
 
-        alpha = score - aspirationWindow;
-        beta = score + aspirationWindow;
+        bestMove = move;
+        bestScore = score;
+
+        // UCI info output
+        std::cout << "info"
+                 << " depth " << currentDepth
+                 << " score cp " << score
+                 << " nodes " << nodes
+                 << " time " << timeManager.getElapsedTime()
+                 << " nps " << (nodes * 1000LL / (timeManager.getElapsedTime() + 1))
+                 << " pv ";
         
-
-        auto end = chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-        // print info
-        cout << "info score " << (board.sideToMove == white ? score : -score) << " depth " << i << " time " << duration.count() << " nodes " << nodes << " pv ";
-        for(int j = 0; j < pvLength[0]; j++)
-            cout << printMove(pvTable[0][j]) << " ";
-        cout << endl;
+        for(int j = 0; j < pvLength[0]; j++) {
+            std::cout << printMove(pvTable[0][j]) << " ";
+        }
+        std::cout << std::endl;
     }
 
-    cout << "Bestmove " << printMove(move) << endl;
+    return {bestMove, bestScore};
+}
 
-    return {move, score};
+std::string formatScore(int score) {
+    if (score > mateLower) {
+        int movesToMate = (mateScore - score + 1) / 2;
+        return "mate " + std::to_string(movesToMate);
+    }
+    else if (score < -mateLower) {
+        int movesToMate = (mateScore + score) / 2;
+        return "mate -" + std::to_string(movesToMate);
+    }
+    return "cp " + std::to_string(score);
 }
