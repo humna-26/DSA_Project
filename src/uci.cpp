@@ -1,10 +1,10 @@
 #include "uci.h"
-#include "SearchUtil.h"
 #include "UCIConstants.h"
 #include "TimeManager.h"
 #include "MoveUtil.h"
 #include "PieceUtil.h"
 #include "Board.h"
+#include "SearchUtil.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -24,6 +24,8 @@ UCIProtocol::UCIProtocol() {
     movestogo = -1;
     depth = UCI::DEFAULT_DEPTH;
     infinite = false;
+
+    initAll();
 }
 
 void UCIProtocol::loop() {
@@ -36,8 +38,8 @@ void UCIProtocol::loop() {
         iss >> token;
 
         if (token == "uci") {
-            std::cout << "id name YourChessEngine" << std::endl;
-            std::cout << "id author YourName" << std::endl;
+            std::cout << "id name ZeroElo bot" << std::endl;
+            std::cout << "id authors Farhad, Saad, Hassan, Humna, Wania" << std::endl;
             // Add UCI options here if needed
             std::cout << "uciok" << std::endl;
         }
@@ -69,6 +71,9 @@ void UCIProtocol::loop() {
             board = Board();
             tt.clear();
             repetitionIndex = 0;
+        }
+        else if (token == "d") {
+            board.printBoard();
         }
     }
 }
@@ -192,7 +197,6 @@ void UCIProtocol::parsePosition(const std::string& command) {
     // If there are moves, play them
     while (iss >> token) {
         // Convert UCI move format to internal move format and apply it
-        // This part needs to be implemented based on your move encoding
         board.generateMoves();
         for (int i = 0; i < board.moveList.count; i++) {
             if (printMove(board.moveList.moves[i]) == token) {
@@ -250,29 +254,29 @@ void UCIProtocol::parseGo(const std::string& command) {
         }
     }
     // Initialize time management
-    timeManager.init(wtime, btime, winc, binc, movestogo, board.sideToMove == white);
+    if (movetime != -1) {
+        timeManager.init(movetime, movetime, 0, 0, 1, board.sideToMove == white);
+    } else {
+        timeManager.init(wtime, btime, winc, binc, movestogo, board.sideToMove == white);
+    }
     
     // Calculate appropriate depth
     int searchDepth;
     if (depth != -1) {
         searchDepth = depth;
-    } else if (infinite) {
-        searchDepth = UCI::MAX_PLY;
     } else {
-        searchDepth = 64;  // Will be limited by time
+        searchDepth = UCI::MAX_PLY;
     }
     
-    // Start the search
-    auto bestMove = findBestMove(board, searchDepth);
-    
-    // Output the best move
-    std::cout << "bestmove " << printMove(bestMove.first) << std::endl;
-
+    std::pair<int, int> bestMove = findBestMove(board, searchDepth);
+    cout << "bestmove " << printMove(bestMove.first) << endl;
 }
 
 void UCIProtocol::setOption(const std::string& command) {
     // Implement setting UCI options here
     // For now, we don't have any options to set
+
+    // default time maybe??
 }
 
 void UCIProtocol::stop() {
@@ -281,6 +285,13 @@ void UCIProtocol::stop() {
 
 void UCIProtocol::quit() {
     // Cleanup before quitting
+    // windows hi krdegi, hopefully no memory leaks
     running = false;
 }
 
+void initAll(){
+    initAttackMaps();
+    initZobristKeys();
+    tt.clear();
+    repetitionIndex = 0;
+}

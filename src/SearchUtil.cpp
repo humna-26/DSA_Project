@@ -1,10 +1,4 @@
 #include "SearchUtil.h"
-#include "Board.h"
-#include "MoveUtil.h"
-#include <chrono>
-#include <cstring>
-#include <iostream>
-#include <string>
 
 using namespace std;
 
@@ -108,13 +102,13 @@ void perft(Board *board, int depth){
 // Negamax search with alpha-beta pruning
 // depth is in plies
 int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int *nodes){
-    // Add time check at the start of the function
+    
     if (((*nodes) & 2047) == 0) {  // Check every 2048 nodes
         if (timeManager.shouldStop()) {
             stopSearch = true;
         }
     }
-    if (stopSearch) return 0;
+    
     // declare score
     int score;
 
@@ -129,7 +123,7 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
     pvLength[ply] = ply;
 
     // check if move is stored, and return if yes
-    if((ply > 0) && !((score = tt.search(board.zobristHash, alpha, beta, depth, ply)) > mateScore) && !((beta - alpha) > 0))
+    if((ply > 0) && !((score = tt.search(board.zobristHash, alpha, beta, depth, ply)) == 2100000000) && !((beta - alpha) > 0))
         return score;
 
     // Base condition
@@ -185,6 +179,8 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 
             // restore board
             memcpy(&board, &boardCopy, sizeof(Board));
+
+            if (stopSearch) return 0;
 
             // check for beta prune
             if(score >= beta){
@@ -287,6 +283,8 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
         // Load back the current config
         memcpy(&board, &boardCopy, sizeof(board));
 
+        if (stopSearch) return 0;
+
         // increment number of moves searched
         movesSearched++;
 
@@ -365,6 +363,13 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
 
 // negamax modified search to search into moves that are only captures. avoids the horizon effect which is caused by fixed search depth
 int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
+
+    if (((*nodes) & 2047) == 0) {  // Check every 2048 nodes
+        if (timeManager.shouldStop()) {
+            stopSearch = true;
+        }
+    }
+
     int eval = evaluatePosition(board);
 
     // Too deep for the pv table to handle, just return eval
@@ -409,6 +414,8 @@ int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
 
         // reset board
         memcpy(&board, &cpy, sizeof(Board));
+
+        if (stopSearch) return 0;
         
         // found better move
         if(score > alpha){
@@ -427,6 +434,7 @@ int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes){
 std::pair<int, int> findBestMove(Board board, int depth) {
     resetSearch();
     timeManager.start();
+
     
     int nodes = 0;
     int move = 0;
@@ -434,30 +442,48 @@ std::pair<int, int> findBestMove(Board board, int depth) {
     int bestMove = 0;
     int bestScore = -infinity;
 
+    // pre declaration of alpha and beta for aspiration window
+    int alpha = -infinity;
+    int beta = infinity;
+
     // Iterative deepening
     for(int currentDepth = 1; currentDepth <= depth; currentDepth++) {
+        if (stopSearch) {
+            return {bestMove, bestScore};
+        }
+
         followPV = 1;
         
-        score = negamax(board, -infinity, infinity, currentDepth, 0, &move, &nodes);
-        
-        if (stopSearch && currentDepth == 1) {
-            return {move, score};
-        }
-        else if (stopSearch) {
+        score = negamax(board, alpha, beta, currentDepth, 0, &move, &nodes);
+
+        if(stopSearch) {
             return {bestMove, bestScore};
+        }
+
+        // if score falls outside of the window, do a full search again at same depth
+        // time gained is more than wasted here (hopefully)
+
+        if(score <= alpha || score >= beta){
+            alpha = -infinity;
+            beta = infinity;
+            currentDepth--;
+            continue;
         }
 
         bestMove = move;
         bestScore = score;
 
+        alpha = score - aspirationWindow;
+        beta = score + aspirationWindow;
+
         // UCI info output
-        std::cout << "info"
-                 << " depth " << currentDepth
-                 << " score cp " << score
-                 << " nodes " << nodes
-                 << " time " << timeManager.getElapsedTime()
-                 << " nps " << (nodes * 1000LL / (timeManager.getElapsedTime() + 1))
-                 << " pv ";
+        cout << "info"
+            << " depth " << currentDepth
+            << " score " << formatScore((board.sideToMove == white ? score : -score))
+            << " nodes " << nodes
+            << " time " << timeManager.getElapsedTime()
+            << " nps " << (nodes * 1000LL / (timeManager.getElapsedTime() + 1))
+            << " pv ";
         
         for(int j = 0; j < pvLength[0]; j++) {
             std::cout << printMove(pvTable[0][j]) << " ";

@@ -1,6 +1,5 @@
 #include "MoveUtil.h"
-#include "PieceUtil.h"
-#include "Board.h"
+#include "SearchUtil.h"
 #include <string>
 #include <iostream>
 
@@ -60,8 +59,6 @@ string printMove(int move)
     string str = "";
     str += ((char)('a' + get_move_source(move) % 8));
     str += (char)('0' + 8 - get_move_source(move) / 8);
-    if (get_move_capture(move)) 
-        str += 'x';
     str += ((char)('a' + get_move_target(move) % 8));
     str += (char)('0' + 8 - get_move_target(move) / 8);
     if (get_move_promoted(move) && !get_move_piece(move)) {
@@ -80,10 +77,6 @@ string printMove(int move)
                 break; 
         }
     }
-    if (get_move_checkmate(move))
-        str += '#';
-    else if (get_move_check(move))
-        str += '+';
     
     return str;
 }

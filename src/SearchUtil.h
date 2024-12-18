@@ -6,7 +6,12 @@
 #include "Transposition.h"
 #include "UCIConstants.h"
 #include "TimeManager.h"
+#include "Board.h"
+#include "uci.h"
 #include <utility>
+#include <cstring>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -25,6 +30,9 @@ static void perft_test(Board *board, int depth, int *count);
 std::pair<int, int> findBestMove(Board board, int depth);
 int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int *nodes);
 int quiescenseSearch(Board board, int alpha, int beta, int ply, int *nodes);
+
+// score format
+string formatScore(int score);
 
 // PV arrays and flags
 extern int pvLength[128];
@@ -61,5 +69,7 @@ inline bool repetitionDetection(uint64_t hash){
     }
     return false;
 }
+
+#include "MoveUtil.h"
 
 #endif

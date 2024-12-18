@@ -3,6 +3,7 @@
 #include "PieceUtil.h"
 #include <cstdint>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 inline pair<int, int> materialValue(Board board){
@@ -267,7 +268,7 @@ inline int kingSafety(Board board){
 }
 
 inline int kingEndGame(Board board){
-    int scores[] ={0, 0};
+    int scores[] = {0, 0};
     
     for(int side = white; side <= black; side++){
         while(board.pieceBitboards[side][king]){
@@ -278,6 +279,25 @@ inline int kingEndGame(Board board){
     }
 
     return scores[0] - scores[1];
+}
+
+inline int kingDist(Board board){
+    // squares
+    int wk = getLSBIndex(board.pieceBitboards[white][king]);
+    int bk = getLSBIndex(board.pieceBitboards[black][king]);
+
+    // rows
+    int wr = wk / 8;
+    int wc = wk % 8;
+
+    // columns
+    int br = bk / 8;
+    int bc = bk % 8;
+
+    // distance formula
+    int dist = (int)sqrt((abs(wr - br))*(abs(wr - br)) + (abs(wc - bc))*(abs(wc - bc)));
+
+    return dist;
 }
 
 int evaluatePosition(Board board){
@@ -294,8 +314,13 @@ int evaluatePosition(Board board){
     eval += bishopPair(board);
     eval += kingSafety(board);
 
-    if(material.first + material.second <= 100000*2 + 550*2 + 320*2 + 400){
+    if((material.first + material.second) <= 100000*2 + 550*2 + 320*2 + 400){
         eval += kingEndGame(board);
+    }
+    if((material.first + material.second) <= 100000*2 + 550*2 + 320){
+        // The further they are, the worse
+        // Good to keep distance if you are lower on material and vice versa
+        eval -= (material.first > material.second ? kingDist(board) : -kingDist(board)) * kingDistBonus;
     }
 
     return board.sideToMove == white ? eval : -eval;

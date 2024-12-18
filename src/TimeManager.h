@@ -2,6 +2,8 @@
 #define TIME_MANAGER_H
 
 #include <chrono>
+#include <limits.h>
+#include <algorithm>
 
 class TimeManager {
 private:
@@ -10,8 +12,8 @@ private:
     bool stopped;
     
     // Time allocation constants
-    static constexpr double MOVE_HORIZON = 40.0;  // Plan for this many moves ahead
-    static constexpr double TIME_SAFETY_MARGIN = 0.9;  // Use 90% of available time at most
+    static constexpr double MOVE_HORIZON = 1.0;  // Plan for this many moves ahead
+    static constexpr double TIME_SAFETY_MARGIN = 1.0;  // Use 90% of available time at most
 
 public:
     TimeManager();

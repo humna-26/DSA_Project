@@ -35,7 +35,7 @@ void TimeManager::init(int wtime, int btime, int winc, int binc, int movestogo, 
     allocatedTime *= TIME_SAFETY_MARGIN;
 
     // Ensure we don't use too much of the remaining time
-    allocatedTime = std::min(allocatedTime, timeLeft / 8);
+    allocatedTime = std::min(allocatedTime, timeLeft / 1);
 }
 
 void TimeManager::start() {

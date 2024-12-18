@@ -6,6 +6,7 @@
 #include "UCIConstants.h"
 #include <string>
 
+
 class UCIProtocol {  // Changed from UCI to UCIProtocol
 private:
     Board board;
@@ -34,5 +35,7 @@ public:
     void stop();
     void quit();
 };
+
+void initAll();
 
 #endif

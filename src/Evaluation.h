@@ -56,14 +56,14 @@ constexpr int kingPositionalValue[64] = {
 };
 
 constexpr int kingEndGameValue[64] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 20, 20, 20, 20, 20, 20, 0,
-    0, 20, 40, 40, 40, 40, 20, 0,
-    0, 20, 40, 60, 60, 40, 20, 0,
-    0, 20, 40, 60, 60, 40, 20, 0,
-    0, 20, 40, 40, 40, 40, 20, 0,
-    0, 20, 20, 20, 20, 20, 20, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
+    -200, -100, -100, -100, -100, -100, -100, -200,
+    -100, 20, 20, 20, 20, 20, 20, -100,
+    -100, 20, 40, 40, 40, 40, 20, -100,
+    -100, 20, 40, 60, 60, 40, 20, -100,
+    -100, 20, 40, 60, 60, 40, 20, -100,
+    -100, 20, 40, 40, 40, 40, 20, -100,
+    -100, 20, 20, 20, 20, 20, 20, -100,
+    -200, -100, -100, -100, -100, -100, -100, -200
 };
 
 constexpr int rookPositionalValue[64] = {
@@ -107,6 +107,8 @@ constexpr int spaceBonus = 2;
 constexpr int kingSafetyBonus = 5;
 // To be added if king can castle
 constexpr int canCastleBonus = 20;
+// To be multiplied by the distance bw kings
+constexpr int kingDistBonus = 40;
 
 
 /*
