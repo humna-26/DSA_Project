@@ -3,8 +3,12 @@
 #include "PieceUtil.h"
 #include <cstdint>
 #include <iostream>
-#include <cmath>
 using namespace std;
+
+int bWW;
+int bWB;
+int bBW;
+int bBB;
 
 inline pair<int, int> materialValue(Board board){
     int scores[] = {0, 0};
@@ -199,10 +203,10 @@ inline int spaceAdvantage(Board board){
 inline int bishopPair(Board board){
     uint64_t bW = board.pieceBitboards[white][bishop];
     uint64_t bB = board.pieceBitboards[black][bishop];
-    int bWW = 0;
-    int bWB = 0;
-    int bBW = 0;
-    int bBB = 0;
+    bWW = 0;
+    bWB = 0;
+    bBW = 0;
+    bBB = 0;
 
     int score = 0;
 
@@ -275,6 +279,17 @@ inline int kingEndGame(Board board){
             int square =  getLSBIndex(board.pieceBitboards[side][king]);
             pop_bit(board.pieceBitboards[side][king], square);
             scores[side] += kingEndGameValue[side?(63-square):square];
+
+            // add score to forcing enemy king to the same colour corners as you have bishops
+
+            if(bWW > 0 || bBW > 0){
+                int dist = min(getDist(square, a8), getDist(square, h1));
+                scores[side] += dist * (kingDistBonus + 20);
+            }
+            if(bWB > 0 || bBB > 0){
+                int dist = min(getDist(square, a1), getDist(square, h8));
+                scores[side] += dist * (kingDistBonus + 20);
+            }
         }
     }
 
@@ -282,22 +297,7 @@ inline int kingEndGame(Board board){
 }
 
 inline int kingDist(Board board){
-    // squares
-    int wk = getLSBIndex(board.pieceBitboards[white][king]);
-    int bk = getLSBIndex(board.pieceBitboards[black][king]);
-
-    // rows
-    int wr = wk / 8;
-    int wc = wk % 8;
-
-    // columns
-    int br = bk / 8;
-    int bc = bk % 8;
-
-    // distance formula
-    int dist = (int)sqrt((abs(wr - br))*(abs(wr - br)) + (abs(wc - bc))*(abs(wc - bc)));
-
-    return dist;
+    return getDist(getLSBIndex(board.pieceBitboards[white][king]), getLSBIndex(board.pieceBitboards[black][king]));
 }
 
 int evaluatePosition(Board board){

@@ -2,6 +2,7 @@
 #define EVALUATION_H
 
 #include "Board.h"
+#include <cmath>
 
 /*
 
@@ -22,11 +23,11 @@ constexpr int pieceValues[] = {
 // Bonus for pawns according to how close they are to promoting.
 constexpr int pawnPositionalValue[64] = {
     0, 0, 0, 0, 0, 0, 0, 0,    // Rank 8
-    100, 100, 100, 100, 100, 100, 100, 100, // Rank 7
-    75, 70, 70, 70, 70, 70, 70, 75,    // Rank 6
-    40, 40, 40, 55, 55, 40, 40, 40,    // Rank 5
-    20, 20, 20, 50, 50, 20, 20, 20,    // Rank 4
-    8, 8, 8, 8, 8, 8, 8, 8,     // Rank 3
+    90, 90, 90, 90, 90, 90, 90, 90, // Rank 7
+    05, 50, 50, 50, 50, 50, 50, 50,    // Rank 6
+    30, 30, 30, 50, 50, 30, 30, 30,    // Rank 5
+    10, 10, 10, 50, 50, 10, 10, 10,    // Rank 4
+    5, 5, 5, 5, 5, 5, 5, 5,     // Rank 3
     0, 0, 0, 0, 0, 0, 0, 0,     // Rank 2
     0, 0, 0, 0, 0, 0, 0, 0      // Rank 1
 };
@@ -102,13 +103,20 @@ constexpr int isolatedPawnBonus = -30;
 // To be added for each doubled pawn
 constexpr int doubledPawnBonus = -8;
 // To be multiplied by the number of squares attacked
-constexpr int spaceBonus = 2;
+constexpr int spaceBonus = 3;
 // To be added for each friendly piece around the king
 constexpr int kingSafetyBonus = 5;
 // To be added if king can castle
 constexpr int canCastleBonus = 20;
 // To be multiplied by the distance bw kings
 constexpr int kingDistBonus = 40;
+
+
+// number of bishops for each side, and colour of square
+extern int bWW;
+extern int bWB;
+extern int bBW;
+extern int bBB;
 
 
 /*
@@ -118,5 +126,18 @@ constexpr int kingDistBonus = 40;
 */
 
 int evaluatePosition(Board board);
+
+inline int getDist(int square1, int square2){
+    // rows
+    int r1 = square1 / 8;
+    int r2 = square2 / 8;
+
+    // columns
+    int c1 = square1 % 8;
+    int c2 = square2 % 8;
+
+    // distance formula
+    return (int)sqrt((abs(r1 - r2))*(abs(r1 - r2)) + (abs(c1 - c2))*(abs(c1 - c2)));
+}
 
 #endif

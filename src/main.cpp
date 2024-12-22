@@ -7,7 +7,7 @@ using namespace std;
 
 UCIProtocol uci;
 
-int main() {
+int main(){
 
     uci.loop();
     
