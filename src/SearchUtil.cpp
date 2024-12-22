@@ -456,10 +456,6 @@ std::pair<int, int> findBestMove(Board board, int depth) {
         
         score = negamax(board, alpha, beta, currentDepth, 0, &move, &nodes);
 
-        if(stopSearch) {
-            return {bestMove, bestScore};
-        }
-
         // if score falls outside of the window, do a full search again at same depth
         // time gained is more than wasted here (hopefully)
 
@@ -468,6 +464,10 @@ std::pair<int, int> findBestMove(Board board, int depth) {
             beta = infinity;
             currentDepth--;
             continue;
+        }
+
+        if(stopSearch) {
+            return {bestMove, bestScore};
         }
 
         bestMove = move;
