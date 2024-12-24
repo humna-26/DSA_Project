@@ -105,7 +105,7 @@ constexpr int doubledPawnBonus = -8;
 // To be multiplied by the number of squares attacked
 constexpr int spaceBonus = 3;
 // To be added for each friendly piece around the king
-constexpr int kingSafetyBonus = 5;
+constexpr int kingSafetyBonus = 15;
 // To be added if king can castle
 constexpr int canCastleBonus = 20;
 // To be multiplied by the distance bw kings

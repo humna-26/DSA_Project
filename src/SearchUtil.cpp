@@ -108,6 +108,9 @@ int negamax(Board board, int alpha, int beta, int depth, int ply, int *move, int
             stopSearch = true;
         }
     }
+
+    if(board.halfMoveClocks[1] >= 50)
+        return 0;
     
     // declare score
     int score;

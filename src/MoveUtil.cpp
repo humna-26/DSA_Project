@@ -64,16 +64,16 @@ string printMove(int move)
     if (get_move_promoted(move) && !get_move_piece(move)) {
         switch(get_move_promotedType(move)) {
             case knight:
-                str += (get_move_colour(move) ? 'k' : 'K');
+                str += 'n';
                 break;
             case queen:
-                str += (get_move_colour(move) ? 'q' : 'Q');
+                str += 'q';
                 break;
             case bishop:
-                str += (get_move_colour(move) ? 'b' : 'B');
+                str += 'b';
                 break;
             case rook:
-                str += (get_move_colour(move) ? 'r' : 'R');
+                str += 'r';
                 break; 
         }
     }

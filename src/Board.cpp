@@ -535,7 +535,8 @@ bool Board::makeMove(int move)
 
     // update full move if move was by black
     if(sideToMove == black) halfMoveClocks[0]++;
-    // reset hald move clock accordingly
+    if(sideToMove == black) halfMoveClocks[1]++;
+    // reset half move clock accordingly
     if(piece == pawn || (get_move_capture(move) > 0)) halfMoveClocks[1] = 0;
     // Update side to move, and zobrist hash accordingly
     this->sideToMove = 1-side;
